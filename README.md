@@ -11,7 +11,7 @@ Features:
  * Icons, Checkboxes
  * DragAndDrop
  * Node customizing (color, height, visibility, text, indenting, icon, checkbox, etc)
- * Wide set of events: permitting events (e.g. CanUnselectNodeNeeded), info events (e.g. NodeTextNeeded), state events (e.g.  NodeSelectedStateChanged), drag&drop events and other.
+ * Wide set of events: permitting events (e.g. *CanUnselectNodeNeeded*), data events (e.g. *NodeTextNeeded*), state events (e.g.  *NodeSelectedStateChanged*), drag&drop events and other.
 
 Screenshots:
 
