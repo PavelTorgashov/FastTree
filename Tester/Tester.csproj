@@ -1,0 +1,174 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{11E7396C-50B2-40FE-8037-B7689AE7AFCF}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Tester</RootNamespace>
+    <AssemblyName>Tester</AssemblyName>
+    <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>x86</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="FastTreeFileExplorerSample2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastTreeFileExplorerSample2.Designer.cs">
+      <DependentUpon>FastTreeFileExplorerSample2.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastTreeFileExplorerSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastTreeFileExplorerSample.Designer.cs">
+      <DependentUpon>FastTreeFileExplorerSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="DataModel\TreeNode.cs" />
+    <Compile Include="FastTreeSimplestSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastTreeSimplestSample.Designer.cs">
+      <DependentUpon>FastTreeSimplestSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastListReadonlyAndDisabledItemsSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListReadonlyAndDisabledItemsSample.Designer.cs">
+      <DependentUpon>FastListReadonlyAndDisabledItemsSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastListDropItemSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListDropItemSample.Designer.cs">
+      <DependentUpon>FastListDropItemSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastListDragItemSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListDragItemSample.Designer.cs">
+      <DependentUpon>FastListDragItemSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastListExpandedSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListExpandedSample.Designer.cs">
+      <DependentUpon>FastListExpandedSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="MainForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.cs">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="FastListSimplestSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListSimplestSample.Designer.cs">
+      <DependentUpon>FastListSimplestSample.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="FastTreeFileExplorerSample2.resx">
+      <DependentUpon>FastTreeFileExplorerSample2.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastTreeFileExplorerSample.resx">
+      <DependentUpon>FastTreeFileExplorerSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastTreeSimplestSample.resx">
+      <DependentUpon>FastTreeSimplestSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastListReadonlyAndDisabledItemsSample.resx">
+      <DependentUpon>FastListReadonlyAndDisabledItemsSample.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastListDropItemSample.resx">
+      <DependentUpon>FastListDropItemSample.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastListDragItemSample.resx">
+      <DependentUpon>FastListDragItemSample.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastListExpandedSample.resx">
+      <DependentUpon>FastListExpandedSample.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="FastListSimplestSample.resx">
+      <DependentUpon>FastListSimplestSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <None Include="app.config" />
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\FastTree\FastTree.csproj">
+      <Project>{C8B484C9-A5C6-4B4E-BF98-8198921F30B6}</Project>
+      <Name>FastTree</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\folder.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\default_icon.png" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
