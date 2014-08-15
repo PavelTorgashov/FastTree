@@ -17,3 +17,4 @@ C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastListReadonlyAndDisab
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeSimplestSample.resources
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeFileExplorerSample.resources
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeFileExplorerSample2.resources
+C:\Projects_CSharp\FastTree\Tester\bin\Debug\FastTree.xml
