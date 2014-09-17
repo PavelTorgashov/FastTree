@@ -370,7 +370,8 @@ namespace FastTreeNS
             {
                 expandedNodes.Add(nodes[itemIndex]);
                 Build(root);
-                OnItemExpanded(itemIndex);
+                if (itemIndex < nodes.Count)
+                    OnItemExpanded(itemIndex);
                 return true;
             }
 
