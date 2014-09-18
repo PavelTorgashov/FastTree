@@ -15,9 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Data;
 using System.Linq;
-using System.Text;
 using System.Windows.Forms;
 
 namespace FastTreeNS
@@ -41,6 +39,9 @@ namespace FastTreeNS
         [Browsable(false)]
         public IEnumerable<object> CheckedNodes { get { return CheckedItemIndex.OrderBy(i => i).Select(i => nodes[i]); } }
 
+        /// <summary>
+        /// List of all visible nodes
+        /// </summary>
         [Browsable(false)]
         public IEnumerable<object> Nodes { get { return nodes; } }
 
@@ -101,11 +102,22 @@ namespace FastTreeNS
         
         public event EventHandler<PaintNodeContentEventArgs> PaintNode;
 
-        public event EventHandler<NodeDragEventArgs> NodeDrag;
         public event EventHandler<NodeChildrenNeededEventArgs> NodeChildrenNeeded;
 
+        /// <summary>
+        /// Occurs when user start to drag node
+        /// </summary>
+        public event EventHandler<NodeDragEventArgs> NodeDrag;
+
+        /// <summary>
+        /// Occurs when user drag object over node
+        /// </summary>
         public event EventHandler<DragOverItemEventArgs> DragOverNode;
-        public event EventHandler<DragOverItemEventArgs> DragDropOverNode;
+
+        /// <summary>
+        /// Occurs when user drop object on given node
+        /// </summary>
+        public event EventHandler<DragOverItemEventArgs> DropOverNode;
 
         protected virtual bool GetNodeVisibility(object node)
         {
@@ -256,14 +268,14 @@ namespace FastTreeNS
                 DragOverNode(this, e);
         }
 
-        protected override void OnDragDropOverItem(DragOverItemEventArgs e)
+        protected override void OnDropOverItem(DragOverItemEventArgs e)
         {
             e.Tag = nodes[e.ItemIndex];
 
-            if (DragDropOverNode != null)
-                DragDropOverNode(this, e);
+            if (DropOverNode != null)
+                DropOverNode(this, e);
 
-            base.OnDragDropOverItem(e);
+            base.OnDropOverItem(e);
         }
 
         #endregion Events

@@ -35,7 +35,7 @@ namespace Tester
 
             e.Result = Path.GetFileName(path);
             if (string.IsNullOrEmpty(e.Result))
-                e.Result = e.Node as string;
+                e.Result = path;
         }
 
         private void ft_NodeChildrenNeeded(object sender, FastTreeNS.NodeChildrenNeededEventArgs e)

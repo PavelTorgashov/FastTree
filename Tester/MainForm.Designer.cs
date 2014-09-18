@@ -52,7 +52,7 @@
             // 
             // button1
             // 
-            this.button1.Location = new System.Drawing.Point(140, 19);
+            this.button1.Location = new System.Drawing.Point(140, 23);
             this.button1.Name = "button1";
             this.button1.Size = new System.Drawing.Size(75, 23);
             this.button1.TabIndex = 0;
@@ -66,7 +66,7 @@
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(116, 33);
             this.label1.TabIndex = 1;
-            this.label1.Text = "FastList Simplest usage sample";
+            this.label1.Text = "Simplest usage sample";
             this.label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // label2
@@ -75,12 +75,12 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(116, 33);
             this.label2.TabIndex = 3;
-            this.label2.Text = "FastList exanded sample";
+            this.label2.Text = "Exanded sample";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button2
             // 
-            this.button2.Location = new System.Drawing.Point(140, 68);
+            this.button2.Location = new System.Drawing.Point(140, 72);
             this.button2.Name = "button2";
             this.button2.Size = new System.Drawing.Size(75, 23);
             this.button2.TabIndex = 2;
@@ -94,12 +94,12 @@
             this.label3.Name = "label3";
             this.label3.Size = new System.Drawing.Size(116, 33);
             this.label3.TabIndex = 5;
-            this.label3.Text = "FastList Drag Item sample";
+            this.label3.Text = "Drag Item sample";
             this.label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button3
             // 
-            this.button3.Location = new System.Drawing.Point(140, 113);
+            this.button3.Location = new System.Drawing.Point(140, 117);
             this.button3.Name = "button3";
             this.button3.Size = new System.Drawing.Size(75, 23);
             this.button3.TabIndex = 4;
@@ -113,12 +113,12 @@
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(116, 33);
             this.label4.TabIndex = 7;
-            this.label4.Text = "FastList Drop Item sample";
+            this.label4.Text = "Drop Item sample";
             this.label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button4
             // 
-            this.button4.Location = new System.Drawing.Point(140, 161);
+            this.button4.Location = new System.Drawing.Point(140, 165);
             this.button4.Name = "button4";
             this.button4.Size = new System.Drawing.Size(75, 23);
             this.button4.TabIndex = 6;
@@ -132,12 +132,12 @@
             this.label5.Name = "label5";
             this.label5.Size = new System.Drawing.Size(116, 33);
             this.label5.TabIndex = 9;
-            this.label5.Text = "FastList Readonly && Disabled Items sample";
+            this.label5.Text = "Readonly && Disabled Items sample";
             this.label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button5
             // 
-            this.button5.Location = new System.Drawing.Point(140, 208);
+            this.button5.Location = new System.Drawing.Point(140, 212);
             this.button5.Name = "button5";
             this.button5.Size = new System.Drawing.Size(75, 23);
             this.button5.TabIndex = 8;
@@ -151,12 +151,12 @@
             this.label6.Name = "label6";
             this.label6.Size = new System.Drawing.Size(183, 33);
             this.label6.TabIndex = 11;
-            this.label6.Text = "FastTree Simplest usage sample";
+            this.label6.Text = "Simplest usage sample";
             this.label6.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button6
             // 
-            this.button6.Location = new System.Drawing.Point(236, 27);
+            this.button6.Location = new System.Drawing.Point(236, 31);
             this.button6.Name = "button6";
             this.button6.Size = new System.Drawing.Size(75, 23);
             this.button6.TabIndex = 10;
@@ -166,16 +166,16 @@
             // 
             // label7
             // 
-            this.label7.Location = new System.Drawing.Point(44, 68);
+            this.label7.Location = new System.Drawing.Point(6, 68);
             this.label7.Name = "label7";
-            this.label7.Size = new System.Drawing.Size(186, 33);
+            this.label7.Size = new System.Drawing.Size(224, 33);
             this.label7.TabIndex = 13;
-            this.label7.Text = "FastTree FileExplorer sample\r\n(IEnumrable based)";
+            this.label7.Text = "FileExplorer sample (IEnumrable based)";
             this.label7.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button7
             // 
-            this.button7.Location = new System.Drawing.Point(236, 68);
+            this.button7.Location = new System.Drawing.Point(236, 72);
             this.button7.Name = "button7";
             this.button7.Size = new System.Drawing.Size(75, 23);
             this.button7.TabIndex = 12;
@@ -189,12 +189,12 @@
             this.label8.Name = "label8";
             this.label8.Size = new System.Drawing.Size(189, 42);
             this.label8.TabIndex = 15;
-            this.label8.Text = "FastTree FileExplorer sample 2\r\n(NodeChildrenNeeded event based)";
+            this.label8.Text = "FileExplorer sample 2\r\n(NodeChildrenNeeded event based)";
             this.label8.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button8
             // 
-            this.button8.Location = new System.Drawing.Point(236, 113);
+            this.button8.Location = new System.Drawing.Point(236, 117);
             this.button8.Name = "button8";
             this.button8.Size = new System.Drawing.Size(75, 23);
             this.button8.TabIndex = 14;
@@ -219,7 +219,7 @@
             this.groupBox1.Size = new System.Drawing.Size(250, 249);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
-            this.groupBox1.Text = "FastList samples";
+            this.groupBox1.Text = "FastList";
             // 
             // groupBox2
             // 
@@ -234,7 +234,7 @@
             this.groupBox2.Size = new System.Drawing.Size(317, 249);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
-            this.groupBox2.Text = "FastTree samples";
+            this.groupBox2.Text = "FastTree";
             // 
             // MainForm
             // 

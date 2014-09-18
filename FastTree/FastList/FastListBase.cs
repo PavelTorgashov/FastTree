@@ -168,13 +168,13 @@ namespace FastTreeNS
             base.OnDragDrop(e);
 
             if (lastDragAndDropEffect != null)
-                OnDragDropOverItem(lastDragAndDropEffect);
+                OnDropOverItem(lastDragAndDropEffect);
 
             lastDragAndDropEffect = null;
             Invalidate();
         }
 
-        protected virtual void OnDragDropOverItem(DragOverItemEventArgs e)
+        protected virtual void OnDropOverItem(DragOverItemEventArgs e)
         {
         }
 

@@ -26,7 +26,7 @@ namespace Tester
         {
             list = new List<string>();
 
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 1000000; i++)
                 list.Add("Item " + i);
         }
 

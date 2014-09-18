@@ -58,9 +58,20 @@ namespace FastTreeNS
 
         public event EventHandler<PaintItemContentEventArgs> PaintItem;
 
+        /// <summary>
+        /// Occurs when user start to drag items
+        /// </summary>
         public event EventHandler<ItemDragEventArgs> ItemDrag;
+
+        /// <summary>
+        /// Occurs when user drag object over node
+        /// </summary>
         public event EventHandler<DragOverItemEventArgs> DragOverItem;
-        public event EventHandler<DragOverItemEventArgs> DragDropOverItem;
+
+        /// <summary>
+        /// Occurs when user drop object on given item
+        /// </summary>
+        public event EventHandler<DragOverItemEventArgs> DropOverItem;
 
         protected override int GetItemHeight(int itemIndex)
         {
@@ -206,12 +217,12 @@ namespace FastTreeNS
                 DragOverItem(this, e);
         }
 
-        protected override void OnDragDropOverItem(DragOverItemEventArgs e)
+        protected override void OnDropOverItem(DragOverItemEventArgs e)
         {
-            if (DragDropOverItem != null)
-                DragDropOverItem(this, e);
+            if (DropOverItem != null)
+                DropOverItem(this, e);
 
-            base.OnDragDropOverItem(e);
+            base.OnDropOverItem(e);
         }
 
         #endregion

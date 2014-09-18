@@ -5,12 +5,12 @@ using System.Runtime.InteropServices;
 // General Information about an assembly is controlled through the following 
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("FastTreeView")]
+[assembly: AssemblyTitle("FastTree")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("")]
-[assembly: AssemblyProduct("FastTreeView")]
-[assembly: AssemblyCopyright("Copyright ©  2014")]
+[assembly: AssemblyProduct("FastTree")]
+[assembly: AssemblyCopyright("Copyright © Pavel Torgashov, 2014, pavel_torgashov@ukr.net")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

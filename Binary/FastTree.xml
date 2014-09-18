@@ -1,0 +1,123 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>FastTree</name>
+    </assembly>
+    <members>
+        <member name="M:FastTreeNS.FastListBase.YToIndex(System.Int32)">
+            <summary>
+            Absolute Y coordinate of the control to item index
+            </summary>
+            <param name="y"></param>
+            <returns></returns>
+        </member>
+        <member name="M:FastTreeNS.FastListBase.PointToIndex(System.Drawing.Point)">
+            <summary>
+            Control visible rect coordinates to item index
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastListBase.PointToItemInfo(System.Drawing.Point)">
+            <summary>
+            Control visible rect coordinates to item info
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastListBase.UpdateScrollbars">
+            <summary>
+            Updates scrollbar position after Value changed
+            </summary>
+        </member>
+        <member name="T:FastTreeNS.FastListBase.VisibleItemInfo">
+            <summary>
+              x0  x1  x2  x3      x4     x5
+              |   |   |   |       |      |
+              □   □   □   ItemText       
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastList.ItemDrag">
+            <summary>
+            Occurs when user start to drag items
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastList.DragOverItem">
+            <summary>
+            Occurs when user drag object over node
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastList.DropOverItem">
+            <summary>
+            Occurs when user drop object on given item
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastTree.GetNodeExpandedChildren(System.Object,System.Boolean)">
+            <summary>
+            Returns all expanded children of the node
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastTree.GetItemExpandedChildren(System.Int32,System.Boolean)">
+            <summary>
+            Returns all expanded children of the item
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.FastTree.Nodes">
+            <summary>
+            List of all visible nodes
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastTree.NodeDrag">
+            <summary>
+            Occurs when user start to drag node
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastTree.DragOverNode">
+            <summary>
+            Occurs when user drag object over node
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastTree.DropOverNode">
+            <summary>
+            Occurs when user drop object on given node
+            </summary>
+        </member>
+        <member name="T:FastTreeNS.Resources">
+            <summary>
+              A strongly-typed resource class, for looking up localized strings, etc.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.ResourceManager">
+            <summary>
+              Returns the cached ResourceManager instance used by this class.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.Culture">
+            <summary>
+              Overrides the current thread's CurrentUICulture property for all
+              resource lookups using this strongly typed resource class.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.checkbox_no">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.checkbox_yes">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.collapse">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.default_icon">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="P:FastTreeNS.Resources.expand">
+            <summary>
+              Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+    </members>
+</doc>
