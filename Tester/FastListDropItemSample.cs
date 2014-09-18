@@ -77,7 +77,7 @@ namespace Tester
             e.Effect = DragDropEffects.None;
         }
 
-        private void fl_DragDropOverItem(object sender, DragOverItemEventArgs e)
+        private void fl_DropOverItem(object sender, DragOverItemEventArgs e)
         {
             var text = (e.Data.GetData(typeof(Label)) as Label).Text;
 

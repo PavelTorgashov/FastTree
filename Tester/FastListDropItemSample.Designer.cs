@@ -74,7 +74,7 @@
             this.fl.TabIndex = 0;
             this.fl.ItemTextNeeded += new System.EventHandler<FastTreeNS.StringItemEventArgs>(this.fl_ItemTextNeeded);
             this.fl.DragOverItem += new System.EventHandler<FastTreeNS.DragOverItemEventArgs>(this.fl_DragOverItem);
-            this.fl.DropOverItem += new System.EventHandler<FastTreeNS.DragOverItemEventArgs>(this.fl_DragDropOverItem);
+            this.fl.DropOverItem += new System.EventHandler<FastTreeNS.DragOverItemEventArgs>(this.fl_DropOverItem);
             // 
             // lbRegular
             // 
