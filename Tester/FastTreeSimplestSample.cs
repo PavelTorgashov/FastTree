@@ -28,15 +28,15 @@ namespace Tester
             for (int i = 0; i < 1000; i++)
             {
                 var n = new Node("Node " + i);
-                root.Childs.Add(n);
+                root.AddChild(n);
                 for (int j = 0; j < 10; j++)
                 {
                     var subNode = new Node("SubNode " + i + "-" + j);
-                    n.Childs.Add(subNode);
+                    n.AddChild(subNode);
                     for (int k = 0; k < 10; k++)
                     {
                         var subSubNode = new Node("SubNode " + i + "-" + j + "-" + k);
-                        subNode.Childs.Add(subSubNode);
+                        subNode.AddChild(subSubNode);
                     }
                 }
             }

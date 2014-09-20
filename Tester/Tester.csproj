@@ -42,6 +42,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FastListVirtualCheckboxesSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastListVirtualCheckboxesSample.Designer.cs">
+      <DependentUpon>FastListVirtualCheckboxesSample.cs</DependentUpon>
+    </Compile>
+    <Compile Include="FastTreeDragAndDropSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastTreeDragAndDropSample.Designer.cs">
+      <DependentUpon>FastTreeDragAndDropSample.cs</DependentUpon>
+    </Compile>
     <Compile Include="FastTreeFileExplorerSample2.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -99,6 +111,14 @@
     <Compile Include="FastListSimplestSample.Designer.cs">
       <DependentUpon>FastListSimplestSample.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FastListVirtualCheckboxesSample.resx">
+      <DependentUpon>FastListVirtualCheckboxesSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <EmbeddedResource Include="FastTreeDragAndDropSample.resx">
+      <DependentUpon>FastTreeDragAndDropSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FastTreeFileExplorerSample2.resx">
       <DependentUpon>FastTreeFileExplorerSample2.cs</DependentUpon>
       <SubType>Designer</SubType>

@@ -35,11 +35,33 @@ namespace FastTreeNS
             }
         }
 
+        #region Overrided methods
+
+        public override bool CheckItem(int itemIndex)
+        {
+            if (GetItemChecked(itemIndex))
+                return true;
+
+            Invalidate();
+
+            if (CanCheckItem(itemIndex))
+            {
+                if (ItemCheckStateNeeded == null)//add to CheckedItemIndex only if handler of ItemCheckStateNeeded is not assigned
+                    CheckedItemIndex.Add(itemIndex);
+                OnItemChecked(itemIndex);
+                return true;
+            }
+
+            return false;
+        }
+        #endregion Overrided methods
+
         #region Events
 
         public event EventHandler<IntItemEventArgs> ItemHeightNeeded;
         public event EventHandler<IntItemEventArgs> ItemIndentNeeded;
         public event EventHandler<StringItemEventArgs> ItemTextNeeded;
+        public event EventHandler<BoolItemEventArgs> ItemCheckStateNeeded;
         public event EventHandler<ImageItemEventArgs> ItemIconNeeded;
         public event EventHandler<BoolItemEventArgs> ItemCheckBoxVisibleNeeded;
         public event EventHandler<ColorItemEventArgs> ItemBackColorNeeded;
@@ -86,6 +108,11 @@ namespace FastTreeNS
         protected override string GetItemText(int itemIndex)
         {
             return GetStringItemProperty(itemIndex, ItemTextNeeded, string.Empty);
+        }
+
+        protected override bool GetItemChecked(int itemIndex)
+        {
+            return GetBoolItemProperty(itemIndex, ItemCheckStateNeeded, CheckedItemIndex.Contains(itemIndex));
         }
 
         protected override Image GetItemIcon(int itemIndex)

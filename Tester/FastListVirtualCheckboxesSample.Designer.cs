@@ -1,6 +1,6 @@
 ﻿namespace Tester
 {
-    partial class FastTreeFileExplorerSample2
+    partial class FastListVirtualCheckboxesSample
     {
         /// <summary>
         /// Required designer variable.
@@ -28,9 +28,9 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FastTreeFileExplorerSample2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FastListVirtualCheckboxesSample));
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
-            this.ft = new FastTreeNS.FastTree();
+            this.fl = new FastTreeNS.FastList();
             this.SuspendLayout();
             // 
             // propertyGrid1
@@ -40,52 +40,53 @@
             this.propertyGrid1.Location = new System.Drawing.Point(446, 14);
             this.propertyGrid1.Name = "propertyGrid1";
             this.propertyGrid1.PropertySort = System.Windows.Forms.PropertySort.Alphabetical;
-            this.propertyGrid1.SelectedObject = this.ft;
+            this.propertyGrid1.SelectedObject = this.fl;
             this.propertyGrid1.Size = new System.Drawing.Size(245, 416);
             this.propertyGrid1.TabIndex = 1;
             this.propertyGrid1.PropertyValueChanged += new System.Windows.Forms.PropertyValueChangedEventHandler(this.propertyGrid1_PropertyValueChanged);
             // 
-            // ft
+            // fl
             // 
-            this.ft.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            this.fl.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.ft.AutoScroll = true;
-            this.ft.AutoScrollMinSize = new System.Drawing.Size(0, 59);
-            this.ft.BackColor = System.Drawing.SystemColors.Window;
-            this.ft.ImageCheckBoxOff = ((System.Drawing.Image)(resources.GetObject("ft.ImageCheckBoxOff")));
-            this.ft.ImageCheckBoxOn = ((System.Drawing.Image)(resources.GetObject("ft.ImageCheckBoxOn")));
-            this.ft.ImageCollapse = ((System.Drawing.Image)(resources.GetObject("ft.ImageCollapse")));
-            this.ft.ImageDefaultIcon = ((System.Drawing.Image)(resources.GetObject("ft.ImageDefaultIcon")));
-            this.ft.ImageExpand = ((System.Drawing.Image)(resources.GetObject("ft.ImageExpand")));
-            this.ft.IsEditMode = false;
-            this.ft.Location = new System.Drawing.Point(12, 14);
-            this.ft.MultiSelect = true;
-            this.ft.Name = "ft";
-            this.ft.ShowExpandBoxes = true;
-            this.ft.ShowIcons = true;
-            this.ft.Size = new System.Drawing.Size(428, 416);
-            this.ft.TabIndex = 2;
-            this.ft.NodeTextNeeded += new System.EventHandler<FastTreeNS.StringNodeEventArgs>(this.ft_NodeTextNeeded);
-            this.ft.NodeIconNeeded += new System.EventHandler<FastTreeNS.ImageNodeEventArgs>(this.ft_NodeIconNeeded);
-            this.ft.NodeChildrenNeeded += new System.EventHandler<FastTreeNS.NodeChildrenNeededEventArgs>(this.ft_NodeChildrenNeeded);
+            this.fl.AutoScroll = true;
+            this.fl.AutoScrollMinSize = new System.Drawing.Size(0, 1902);
+            this.fl.BackColor = System.Drawing.SystemColors.Window;
+            this.fl.ImageCheckBoxOff = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOff")));
+            this.fl.ImageCheckBoxOn = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOn")));
+            this.fl.ImageCollapse = ((System.Drawing.Image)(resources.GetObject("fl.ImageCollapse")));
+            this.fl.ImageDefaultIcon = ((System.Drawing.Image)(resources.GetObject("fl.ImageDefaultIcon")));
+            this.fl.ImageExpand = ((System.Drawing.Image)(resources.GetObject("fl.ImageExpand")));
+            this.fl.IsEditMode = false;
+            this.fl.ItemCount = 100;
+            this.fl.Location = new System.Drawing.Point(12, 12);
+            this.fl.MultiSelect = true;
+            this.fl.Name = "fl";
+            this.fl.ShowCheckBoxes = true;
+            this.fl.ShowIcons = true;
+            this.fl.Size = new System.Drawing.Size(428, 418);
+            this.fl.TabIndex = 0;
+            this.fl.ItemTextNeeded += new System.EventHandler<FastTreeNS.StringItemEventArgs>(this.fl_ItemTextNeeded);
+            this.fl.ItemCheckStateNeeded += new System.EventHandler<FastTreeNS.BoolItemEventArgs>(this.fl_ItemCheckStateNeeded);
+            this.fl.ItemCheckedStateChanged += new System.EventHandler<FastTreeNS.ItemCheckedStateChangedEventArgs>(this.fl_ItemCheckedStateChanged);
             // 
-            // FastTreeFileExplorerSample2
+            // FastListVirtualCheckboxesSample
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 442);
-            this.Controls.Add(this.ft);
             this.Controls.Add(this.propertyGrid1);
-            this.Name = "FastTreeFileExplorerSample2";
-            this.Text = "FastTreeFileExplorerSample2";
+            this.Controls.Add(this.fl);
+            this.Name = "FastListVirtualCheckboxesSample";
+            this.Text = "FastListVirtualCheckboxesSample";
             this.ResumeLayout(false);
 
         }
 
         #endregion
 
+        private FastTreeNS.FastList fl;
         private System.Windows.Forms.PropertyGrid propertyGrid1;
-        private FastTreeNS.FastTree ft;
     }
 }

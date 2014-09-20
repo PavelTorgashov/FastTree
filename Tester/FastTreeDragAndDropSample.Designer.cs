@@ -1,6 +1,6 @@
 ﻿namespace Tester
 {
-    partial class FastTreeFileExplorerSample2
+    partial class FastTreeDragAndDropSample
     {
         /// <summary>
         /// Required designer variable.
@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FastTreeFileExplorerSample2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FastTreeDragAndDropSample));
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.ft = new FastTreeNS.FastTree();
             this.SuspendLayout();
@@ -47,6 +47,8 @@
             // 
             // ft
             // 
+            this.ft.AllowDragItems = true;
+            this.ft.AllowDrop = true;
             this.ft.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
@@ -66,19 +68,18 @@
             this.ft.ShowIcons = true;
             this.ft.Size = new System.Drawing.Size(428, 416);
             this.ft.TabIndex = 2;
-            this.ft.NodeTextNeeded += new System.EventHandler<FastTreeNS.StringNodeEventArgs>(this.ft_NodeTextNeeded);
-            this.ft.NodeIconNeeded += new System.EventHandler<FastTreeNS.ImageNodeEventArgs>(this.ft_NodeIconNeeded);
-            this.ft.NodeChildrenNeeded += new System.EventHandler<FastTreeNS.NodeChildrenNeededEventArgs>(this.ft_NodeChildrenNeeded);
+            this.ft.DragOverNode += new System.EventHandler<FastTreeNS.DragOverItemEventArgs>(this.ft_DragOverNode);
+            this.ft.DropOverNode += new System.EventHandler<FastTreeNS.DragOverItemEventArgs>(this.ft_DropOverNode);
             // 
-            // FastTreeFileExplorerSample2
+            // FastTreeDragAndDropSample
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(703, 442);
             this.Controls.Add(this.ft);
             this.Controls.Add(this.propertyGrid1);
-            this.Name = "FastTreeFileExplorerSample2";
-            this.Text = "FastTreeFileExplorerSample2";
+            this.Name = "FastTreeDragAndDropSample";
+            this.Text = "FastTreeDragAndDropSample";
             this.ResumeLayout(false);
 
         }

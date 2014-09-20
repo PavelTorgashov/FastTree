@@ -55,5 +55,15 @@ namespace Tester
         {
             new FastTreeFileExplorerSample2().Show();
         }
+
+        private void button9_Click(object sender, EventArgs e)
+        {
+            new FastTreeDragAndDropSample().Show();
+        }
+
+        private void button10_Click(object sender, EventArgs e)
+        {
+            new FastListVirtualCheckboxesSample().Show();
+        }
     }
 }

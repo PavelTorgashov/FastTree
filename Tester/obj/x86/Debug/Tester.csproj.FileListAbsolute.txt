@@ -18,3 +18,5 @@ C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeSimplestSample.r
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeFileExplorerSample.resources
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeFileExplorerSample2.resources
 C:\Projects_CSharp\FastTree\Tester\bin\Debug\FastTree.xml
+C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeDragAndDropSample.resources
+C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastListVirtualCheckboxesSample.resources

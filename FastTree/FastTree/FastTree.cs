@@ -83,6 +83,7 @@ namespace FastTreeNS
 
         public event EventHandler<IntNodeEventArgs> NodeHeightNeeded;
         public event EventHandler<StringNodeEventArgs> NodeTextNeeded;
+        public event EventHandler<BoolNodeEventArgs> NodeCheckStateNeeded;
         public event EventHandler<ImageNodeEventArgs> NodeIconNeeded;
         public event EventHandler<BoolNodeEventArgs> NodeCheckBoxVisibleNeeded;
         public event EventHandler<ColorNodeEventArgs> NodeBackColorNeeded;
@@ -134,6 +135,11 @@ namespace FastTreeNS
         protected override string GetItemText(int itemIndex)
         {
             return GetStringNodeProperty(itemIndex, NodeTextNeeded, nodes[itemIndex].ToString());
+        }
+
+        protected override bool GetItemChecked(int itemIndex)
+        {
+            return GetBoolNodeProperty(itemIndex, NodeCheckStateNeeded, CheckedItemIndex.Contains(itemIndex));
         }
 
         protected override Image GetItemIcon(int itemIndex)
@@ -479,7 +485,7 @@ namespace FastTreeNS
 
         public virtual bool IsNodeChecked(object node)
         {
-            return CheckedItemIndex.Contains(nodes.IndexOf(node));
+            return GetItemChecked(nodes.IndexOf(node));
         }
 
         public virtual bool IsNodeExpanded(object node)
@@ -628,6 +634,24 @@ namespace FastTreeNS
             }
 
             return true;
+        }
+
+        public override bool CheckItem(int itemIndex)
+        {
+            if (GetItemChecked(itemIndex))
+                return true;
+
+            Invalidate();
+
+            if (CanCheckItem(itemIndex))
+            {
+                if (NodeCheckStateNeeded == null)//add to CheckedItemIndex only if handler of NodeCheckStateNeeded is not assigned
+                    CheckedItemIndex.Add(itemIndex);
+                OnItemChecked(itemIndex);
+                return true;
+            }
+
+            return false;
         }
 
         #endregion

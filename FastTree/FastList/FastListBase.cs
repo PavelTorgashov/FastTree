@@ -123,7 +123,14 @@ namespace FastTreeNS
             var itemIndex = YToIndexAround(p.Y + VerticalScroll.Value);
             var rect = CalcItemRect(itemIndex);
 
-            var ea = new DragOverItemEventArgs(e.Data, e.KeyState, p.X, p.Y, e.AllowedEffect, e.Effect, rect){ItemIndex = itemIndex};
+            var textRect = rect;
+            if (visibleItemInfos.ContainsKey(itemIndex))
+            {
+                var info = visibleItemInfos[itemIndex];
+                textRect = new Rectangle(info.X_Text, rect.Y, info.X_EndText - info.X_Text + 1, rect.Height);
+            }
+
+            var ea = new DragOverItemEventArgs(e.Data, e.KeyState, p.X, p.Y, e.AllowedEffect, e.Effect, rect, textRect){ItemIndex = itemIndex};
 
             OnDragOverItem(ea);
 
@@ -311,7 +318,7 @@ namespace FastTreeNS
                     {
                         if (SelectedItemIndex.Count > 0)
                         {
-                            var val = CheckedItemIndex.Contains(SelectedItemIndex.First());
+                            var val = GetItemChecked(SelectedItemIndex.First());
                             if (val)
                                 UncheckSelected();
                             else
@@ -458,7 +465,7 @@ namespace FastTreeNS
                     mouseSelectArea = Rectangle.Empty;
             }
             else
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && SelectedItemIndex.Count > 0 && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
             {
                 OnItemDrag(new HashSet<int>(SelectedItemIndex));
             }else
@@ -567,7 +574,7 @@ namespace FastTreeNS
 
         protected virtual void OnCheckboxClick(VisibleItemInfo info)
         {
-            if (CheckedItemIndex.Contains(info.ItemIndex))
+            if (GetItemChecked(info.ItemIndex))
                 UncheckItem(info.ItemIndex);
             else
                 CheckItem(info.ItemIndex);
@@ -575,7 +582,7 @@ namespace FastTreeNS
 
         public virtual bool CheckItem(int itemIndex)
         {
-            if (CheckedItemIndex.Contains(itemIndex))
+            if (GetItemChecked(itemIndex))
                 return true;
 
             Invalidate();
@@ -601,7 +608,7 @@ namespace FastTreeNS
 
         public virtual bool UncheckItem(int itemIndex)
         {
-            if (!CheckedItemIndex.Contains(itemIndex))
+            if (!GetItemChecked(itemIndex))
                 return true;
 
             Invalidate();
@@ -837,7 +844,10 @@ namespace FastTreeNS
             var c1 = Color.FromArgb(SelectionColor.A == 255 ? SelectionColorOpaque : SelectionColor.A, SelectionColor);
             var c2 = Color.Transparent;
 
-            var rect = CalcItemRect(e.ItemIndex);
+            if (!visibleItemInfos.ContainsKey(e.ItemIndex))
+                return;
+            var info = visibleItemInfos[e.ItemIndex];
+            var rect = new Rectangle(info.X_ExpandBox, info.Y, 1000, info.Height);
 
             switch(e.InsertEffect)
             {
@@ -863,7 +873,7 @@ namespace FastTreeNS
                 case InsertEffect.AddAsChild:
                     if (e.ItemIndex >= 0 && e.ItemIndex < ItemCount)
                     {
-                        var dx = GetItemIndent(e.ItemIndex) + 16;
+                        var dx = GetItemIndent(e.ItemIndex) + 80;
                         rect.Offset(dx, 0);
                         using (var pen = new Pen(c1, 2) {DashStyle = DashStyle.Dash})
                             gr.DrawLine(pen, rect.Left, rect.Bottom, rect.Right, rect.Bottom);
@@ -958,7 +968,7 @@ namespace FastTreeNS
 
             if (info.CheckBoxVisible)
             {
-                var img = (Bitmap)(CheckedItemIndex.Contains(info.ItemIndex) ? ImageCheckBoxOn : ImageCheckBoxOff);
+                var img = (Bitmap)(GetItemChecked(info.ItemIndex) ? ImageCheckBoxOn : ImageCheckBoxOff);
                 img.SetResolution(gr.DpiX, gr.DpiY);
                 gr.DrawImage(img, info.X_CheckBox, info.Y + 1);
             }
@@ -1196,6 +1206,11 @@ namespace FastTreeNS
             return ShowCheckBoxes;
         }
 
+        protected virtual bool GetItemChecked(int itemIndex)
+        {
+            return CheckedItemIndex.Contains(itemIndex);
+        }
+
         protected virtual Image GetItemIcon(int itemIndex)
         {
             return null;
@@ -1386,12 +1401,14 @@ namespace FastTreeNS
         public int ItemIndex { get; set;}
         public InsertEffect InsertEffect { get; set; }
         public Rectangle ItemRect { get; private set; }
+        public Rectangle TextRect { get; private set; }
         public object Tag { get; set; }
 
-        public DragOverItemEventArgs(IDataObject data, int keyState, int x, int y, DragDropEffects allowedEffects, DragDropEffects effect, Rectangle itemRect)
+        public DragOverItemEventArgs(IDataObject data, int keyState, int x, int y, DragDropEffects allowedEffects, DragDropEffects effect, Rectangle itemRect, Rectangle textRect)
             : base(data, keyState, x, y, allowedEffects, effect)
         {
             this.ItemRect = itemRect;
+            this.TextRect = textRect;
         }
     }
 

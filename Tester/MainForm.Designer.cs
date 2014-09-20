@@ -46,6 +46,10 @@
             this.button8 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
+            this.label9 = new System.Windows.Forms.Label();
+            this.button9 = new System.Windows.Forms.Button();
+            this.label10 = new System.Windows.Forms.Label();
+            this.button10 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -75,7 +79,7 @@
             this.label2.Name = "label2";
             this.label2.Size = new System.Drawing.Size(116, 33);
             this.label2.TabIndex = 3;
-            this.label2.Text = "Exanded sample";
+            this.label2.Text = "Expanded sample";
             this.label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // button2
@@ -204,6 +208,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label10);
+            this.groupBox1.Controls.Add(this.button10);
             this.groupBox1.Controls.Add(this.button1);
             this.groupBox1.Controls.Add(this.label1);
             this.groupBox1.Controls.Add(this.button2);
@@ -216,13 +222,15 @@
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 249);
+            this.groupBox1.Size = new System.Drawing.Size(250, 310);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FastList";
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label9);
+            this.groupBox2.Controls.Add(this.button9);
             this.groupBox2.Controls.Add(this.label6);
             this.groupBox2.Controls.Add(this.button6);
             this.groupBox2.Controls.Add(this.label8);
@@ -236,11 +244,49 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "FastTree";
             // 
+            // label9
+            // 
+            this.label9.Location = new System.Drawing.Point(41, 161);
+            this.label9.Name = "label9";
+            this.label9.Size = new System.Drawing.Size(189, 42);
+            this.label9.TabIndex = 17;
+            this.label9.Text = "Drag&&Drop sample";
+            this.label9.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button9
+            // 
+            this.button9.Location = new System.Drawing.Point(236, 165);
+            this.button9.Name = "button9";
+            this.button9.Size = new System.Drawing.Size(75, 23);
+            this.button9.TabIndex = 16;
+            this.button9.Text = "Show";
+            this.button9.UseVisualStyleBackColor = true;
+            this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // label10
+            // 
+            this.label10.Location = new System.Drawing.Point(18, 257);
+            this.label10.Name = "label10";
+            this.label10.Size = new System.Drawing.Size(116, 33);
+            this.label10.TabIndex = 11;
+            this.label10.Text = "Virtual checkboxes sample";
+            this.label10.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button10
+            // 
+            this.button10.Location = new System.Drawing.Point(140, 261);
+            this.button10.Name = "button10";
+            this.button10.Size = new System.Drawing.Size(75, 23);
+            this.button10.TabIndex = 10;
+            this.button10.Text = "Show";
+            this.button10.UseVisualStyleBackColor = true;
+            this.button10.Click += new System.EventHandler(this.button10_Click);
+            // 
             // MainForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(626, 280);
+            this.ClientSize = new System.Drawing.Size(626, 334);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
@@ -272,5 +318,9 @@
         private System.Windows.Forms.Button button8;
         private System.Windows.Forms.GroupBox groupBox1;
         private System.Windows.Forms.GroupBox groupBox2;
+        private System.Windows.Forms.Label label9;
+        private System.Windows.Forms.Button button9;
+        private System.Windows.Forms.Label label10;
+        private System.Windows.Forms.Button button10;
     }
 }

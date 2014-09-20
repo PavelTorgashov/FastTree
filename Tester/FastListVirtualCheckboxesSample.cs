@@ -9,11 +9,11 @@ using System.Windows.Forms;
 
 namespace Tester
 {
-    public partial class FastListSimplestSample : Form
+    public partial class FastListVirtualCheckboxesSample : Form
     {
-        private List<string> list;
+        private List<MyItem> list;
 
-        public FastListSimplestSample()
+        public FastListVirtualCheckboxesSample()
         {
             InitializeComponent();
 
@@ -24,15 +24,25 @@ namespace Tester
 
         private void CreateList()
         {
-            list = new List<string>();
+            list = new List<MyItem>();
 
             for (int i = 0; i < 100000; i++)
-                list.Add("Item " + i);
+                list.Add(new MyItem{Name = "Item " + i, Checked = (i % 3) == 0});
         }
 
         private void fl_ItemTextNeeded(object sender, FastTreeNS.StringItemEventArgs e)
         {
-            e.Result = list[e.ItemIndex];
+            e.Result = list[e.ItemIndex].Name;
+        }
+
+        private void fl_ItemCheckStateNeeded(object sender, FastTreeNS.BoolItemEventArgs e)
+        {
+            e.Result = list[e.ItemIndex].Checked;
+        }
+
+        private void fl_ItemCheckedStateChanged(object sender, FastTreeNS.ItemCheckedStateChangedEventArgs e)
+        {
+            list[e.ItemIndex].Checked = e.Checked;
         }
 
         #region Routines
@@ -43,5 +53,11 @@ namespace Tester
         }
 
         #endregion
+    }
+
+    class MyItem
+    {
+        public string Name;
+        public bool Checked;
     }
 }
