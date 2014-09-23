@@ -54,6 +54,15 @@ namespace FastTreeNS
 
             return false;
         }
+
+        protected override bool IsItemHeightFixed
+        {
+            get
+            {
+                return ItemHeightNeeded == null;
+            }
+        }
+
         #endregion Overrided methods
 
         #region Events

@@ -21,7 +21,7 @@ using System.Linq;
 
 namespace FastTreeNS
 {
-    [ToolboxItem(false)] 
+    [ToolboxItem(false)]
     public class FastListBase : UserControl
     {
         private readonly List<int> yOfItems = new List<int>();
@@ -107,7 +107,10 @@ namespace FastTreeNS
             set
             {
                 itemCount = value;
-                Build();
+                if (IsHandleCreated)
+                    Build();
+                else
+                    BuildNeeded();
             }
         }
 
@@ -204,8 +207,8 @@ namespace FastTreeNS
                 res = Rectangle.FromLTRB(ClientRectangle.Left + Padding.Left, ClientRectangle.Top + Padding.Top - 2, ClientRectangle.Right - Padding.Right, ClientRectangle.Top + Padding.Top - 1);
             else
             {
-                var y = yOfItems[i];
-                var h = yOfItems[i + 1] - y;
+                var y = GetItemY(i);
+                var h = GetItemY(i + 1) - y;
 
                 res = Rectangle.FromLTRB(ClientRectangle.Left + Padding.Left, y, ClientRectangle.Right - Padding.Right,
                                          y + h);
@@ -279,7 +282,7 @@ namespace FastTreeNS
                     if (SelectedItemIndex.Count > 0)
                     {
                         var i = SelectedItemIndex.First();
-                        var y = yOfItems[i] - ClientRectMinusPaddings.Height;
+                        var y = GetItemY(i) - ClientRectMinusPaddings.Height;
                         i = YToIndex(y) + 1;
                         SelectItem(Math.Max(0, Math.Min(ItemCount - 1, i)));
                     }
@@ -292,7 +295,7 @@ namespace FastTreeNS
                     if (SelectedItemIndex.Count > 0)
                     {
                         var i = SelectedItemIndex.First();
-                        var y = yOfItems[i] + ClientRectMinusPaddings.Height;
+                        var y = GetItemY(i) + ClientRectMinusPaddings.Height;
                         i = YToIndex(y);
                         SelectItem(i < 0 ? ItemCount - 1 : i);
                     }
@@ -1007,6 +1010,11 @@ namespace FastTreeNS
 
         #region Coordinates
 
+        protected virtual bool IsItemHeightFixed
+        {
+            get { return true; }
+        }
+
         /// <summary>
         /// Absolute Y coordinate of the control to item index
         /// </summary>
@@ -1020,11 +1028,19 @@ namespace FastTreeNS
             if (ItemCount <= 0)
                 return -1;
 
-            int i = yOfItems.BinarySearch(y + 1);
-            if (i < 0)
+            int i = 0;
+            
+            if(IsItemHeightFixed)
             {
-                i = ~i;
-                i -= 1;
+                i = (y - Padding.Top) / (ItemHeightDefault + ItemInterval);
+            }else
+            {
+                i = yOfItems.BinarySearch(y + 1);
+                if (i < 0)
+                {
+                    i = ~i;
+                    i -= 1;
+                }
             }
 
             if (i >= ItemCount)
@@ -1032,17 +1048,34 @@ namespace FastTreeNS
 
             return i;
         }
+        
+        protected virtual int GetItemY(int index)
+        {
+            if (IsItemHeightFixed)
+                return Padding.Top + index * (ItemHeightDefault + ItemInterval);
+            else
+                return yOfItems[index];
+        }
 
         protected int YToIndexAround(int y)
         {
             if (ItemCount <= 0)
                 return -1;
 
-            int i = yOfItems.BinarySearch(y + 1);
-            if (i < 0)
+            var i = 0;
+
+            if (IsItemHeightFixed)
             {
-                i = ~i;
-                i -= 1;
+                i = (y - Padding.Top) / (ItemHeightDefault + ItemInterval);
+            }
+            else
+            {
+                i = yOfItems.BinarySearch(y + 1);
+                if (i < 0)
+                {
+                    i = ~i;
+                    i -= 1;
+                }
             }
 
             if (i < 0)
@@ -1126,9 +1159,9 @@ namespace FastTreeNS
                 ItemIndex = itemIndex;
                 CheckBoxVisible = list.ShowCheckBoxes && list.GetItemCheckBoxVisible(itemIndex);
                 Icon = list.GetItemIcon(itemIndex);
-                var y = list.yOfItems[itemIndex];
+                var y = list.GetItemY(itemIndex);
                 Y = y - vertScroll;
-                Height = list.yOfItems[itemIndex + 1] - y - list.ItemInterval;
+                Height = list.GetItemY(itemIndex + 1) - y - list.ItemInterval;
                 Text = list.GetItemText(itemIndex) ?? "";
                 Expanded = list.GetItemExpanded(itemIndex);
                 ExpandBoxVisible = list.ShowExpandBoxes && (Expanded ? list.CanCollapseItem(itemIndex) : list.CanExpandItem(itemIndex));
@@ -1158,15 +1191,22 @@ namespace FastTreeNS
         {
             yOfItems.Clear();
 
-            var y = Padding.Top;
+            int y = Padding.Top;
 
-            for (int i = 0; i < itemCount;i++)
+            if (!IsItemHeightFixed)
             {
+                for (int i = 0; i < itemCount; i++)
+                {
+                    yOfItems.Add(y);
+                    y += GetItemHeight(i) + ItemInterval;
+                }
+
                 yOfItems.Add(y);
-                y += GetItemHeight(i) + ItemInterval;
+            }else
+            {
+                y += itemCount*(ItemHeightDefault + ItemInterval);
             }
 
-            yOfItems.Add(y);
 
             SelectedItemIndex.RemoveWhere(i => i >= itemCount);
             CheckedItemIndex.RemoveWhere(i => i >= itemCount);
@@ -1378,7 +1418,7 @@ namespace FastTreeNS
             if (itemIndex < 0 || itemIndex >= ItemCount)
                 return;
 
-            var y = yOfItems[itemIndex];
+            var y = GetItemY(itemIndex);
             var height = GetItemHeight(itemIndex);
             ScrollToRectangle(new Rectangle(0, y, ClientRectangle.Width, height));
         }
@@ -1394,6 +1434,23 @@ namespace FastTreeNS
         }
 
         #endregion
+
+        #region ISupportInitialize
+
+        protected bool IsInitializing;
+
+        public void BeginInit()
+        {
+            IsInitializing = true;
+        }
+
+        public void EndInit()
+        {
+            IsInitializing = false;
+            ItemCount = ItemCount;
+        }
+
+        #endregion ISupportInitialize
     }
 
     public class DragOverItemEventArgs : DragEventArgs

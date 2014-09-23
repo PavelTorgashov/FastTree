@@ -25,11 +25,11 @@ namespace Tester
         private void CreateTree()
         {
             root = new Node("Root");
-            for (int i = 0; i < 1000; i++)
+            for (int i = 0; i < 100; i++)
             {
                 var n = new Node("Node " + i);
                 root.AddChild(n);
-                for (int j = 0; j < 10; j++)
+                for (int j = 0; j < 100; j++)
                 {
                     var subNode = new Node("SubNode " + i + "-" + j);
                     n.AddChild(subNode);

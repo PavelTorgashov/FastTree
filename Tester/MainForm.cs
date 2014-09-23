@@ -65,5 +65,15 @@ namespace Tester
         {
             new FastListVirtualCheckboxesSample().Show();
         }
+
+        private void button11_Click(object sender, EventArgs e)
+        {
+            new FastListStressTest().Show();
+        }
+
+        private void button12_Click(object sender, EventArgs e)
+        {
+            new FastTreeStressTest().Show();
+        }
     }
 }
