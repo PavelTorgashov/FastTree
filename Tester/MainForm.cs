@@ -75,5 +75,10 @@ namespace Tester
         {
             new FastTreeStressTest().Show();
         }
+
+        private void button13_Click(object sender, EventArgs e)
+        {
+            new FastListCustomize().Show();
+        }
     }
 }

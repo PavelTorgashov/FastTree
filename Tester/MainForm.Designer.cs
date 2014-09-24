@@ -45,15 +45,17 @@
             this.label8 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label11 = new System.Windows.Forms.Label();
+            this.button11 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
             this.button10 = new System.Windows.Forms.Button();
             this.groupBox2 = new System.Windows.Forms.GroupBox();
-            this.label9 = new System.Windows.Forms.Label();
-            this.button9 = new System.Windows.Forms.Button();
-            this.label11 = new System.Windows.Forms.Label();
-            this.button11 = new System.Windows.Forms.Button();
             this.label12 = new System.Windows.Forms.Label();
             this.button12 = new System.Windows.Forms.Button();
+            this.label9 = new System.Windows.Forms.Label();
+            this.button9 = new System.Windows.Forms.Button();
+            this.label13 = new System.Windows.Forms.Label();
+            this.button13 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -212,6 +214,8 @@
             // 
             // groupBox1
             // 
+            this.groupBox1.Controls.Add(this.label13);
+            this.groupBox1.Controls.Add(this.button13);
             this.groupBox1.Controls.Add(this.label11);
             this.groupBox1.Controls.Add(this.button11);
             this.groupBox1.Controls.Add(this.label10);
@@ -228,10 +232,29 @@
             this.groupBox1.Controls.Add(this.button5);
             this.groupBox1.Location = new System.Drawing.Point(12, 12);
             this.groupBox1.Name = "groupBox1";
-            this.groupBox1.Size = new System.Drawing.Size(250, 375);
+            this.groupBox1.Size = new System.Drawing.Size(250, 397);
             this.groupBox1.TabIndex = 16;
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FastList";
+            // 
+            // label11
+            // 
+            this.label11.Location = new System.Drawing.Point(18, 302);
+            this.label11.Name = "label11";
+            this.label11.Size = new System.Drawing.Size(116, 33);
+            this.label11.TabIndex = 13;
+            this.label11.Text = "Stress test: 100 mln items";
+            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button11
+            // 
+            this.button11.Location = new System.Drawing.Point(140, 306);
+            this.button11.Name = "button11";
+            this.button11.Size = new System.Drawing.Size(75, 23);
+            this.button11.TabIndex = 12;
+            this.button11.Text = "Show";
+            this.button11.UseVisualStyleBackColor = true;
+            this.button11.Click += new System.EventHandler(this.button11_Click);
             // 
             // label10
             // 
@@ -271,6 +294,25 @@
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "FastTree";
             // 
+            // label12
+            // 
+            this.label12.Location = new System.Drawing.Point(41, 208);
+            this.label12.Name = "label12";
+            this.label12.Size = new System.Drawing.Size(189, 42);
+            this.label12.TabIndex = 19;
+            this.label12.Text = "Stress test: 100 000 subnodes per each node, infinite depth";
+            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button12
+            // 
+            this.button12.Location = new System.Drawing.Point(236, 212);
+            this.button12.Name = "button12";
+            this.button12.Size = new System.Drawing.Size(75, 23);
+            this.button12.TabIndex = 18;
+            this.button12.Text = "Show";
+            this.button12.UseVisualStyleBackColor = true;
+            this.button12.Click += new System.EventHandler(this.button12_Click);
+            // 
             // label9
             // 
             this.label9.Location = new System.Drawing.Point(41, 161);
@@ -290,43 +332,24 @@
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
             // 
-            // label11
+            // label13
             // 
-            this.label11.Location = new System.Drawing.Point(18, 302);
-            this.label11.Name = "label11";
-            this.label11.Size = new System.Drawing.Size(116, 33);
-            this.label11.TabIndex = 13;
-            this.label11.Text = "Stress test: 100 mln items";
-            this.label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            this.label13.Location = new System.Drawing.Point(18, 345);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(116, 33);
+            this.label13.TabIndex = 15;
+            this.label13.Text = "Customizing sample";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
-            // button11
+            // button13
             // 
-            this.button11.Location = new System.Drawing.Point(140, 306);
-            this.button11.Name = "button11";
-            this.button11.Size = new System.Drawing.Size(75, 23);
-            this.button11.TabIndex = 12;
-            this.button11.Text = "Show";
-            this.button11.UseVisualStyleBackColor = true;
-            this.button11.Click += new System.EventHandler(this.button11_Click);
-            // 
-            // label12
-            // 
-            this.label12.Location = new System.Drawing.Point(41, 208);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(189, 42);
-            this.label12.TabIndex = 19;
-            this.label12.Text = "Stress test: 100 000 subnodes per each node, infinite depth";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // button12
-            // 
-            this.button12.Location = new System.Drawing.Point(236, 212);
-            this.button12.Name = "button12";
-            this.button12.Size = new System.Drawing.Size(75, 23);
-            this.button12.TabIndex = 18;
-            this.button12.Text = "Show";
-            this.button12.UseVisualStyleBackColor = true;
-            this.button12.Click += new System.EventHandler(this.button12_Click);
+            this.button13.Location = new System.Drawing.Point(140, 349);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 14;
+            this.button13.Text = "Show";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // MainForm
             // 
@@ -372,5 +395,7 @@
         private System.Windows.Forms.Button button11;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.Button button12;
+        private System.Windows.Forms.Label label13;
+        private System.Windows.Forms.Button button13;
     }
 }

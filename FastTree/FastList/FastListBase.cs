@@ -917,11 +917,16 @@ namespace FastTreeNS
 
         protected virtual void DrawItem(Graphics gr, VisibleItemInfo info)
         {
+            DrawItemWhole(gr, info);
+        }
+
+        public void DrawItemWhole(Graphics gr, VisibleItemInfo info)
+        {
             DrawItemBackgound(gr, info);
 
-            if (lastDragAndDropEffect == null)//do not draw selection when drag&drop over the control
-            if (SelectedItemIndex.Contains(info.ItemIndex))
-                DrawSelection(gr, info);
+            if (lastDragAndDropEffect == null) //do not draw selection when drag&drop over the control
+                if (SelectedItemIndex.Contains(info.ItemIndex))
+                    DrawSelection(gr, info);
 
             DrawItemIcons(gr, info);
             DrawItemContent(gr, info);

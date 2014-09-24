@@ -22,3 +22,4 @@ C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeDragAndDropSampl
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastListVirtualCheckboxesSample.resources
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastListStressTest.resources
 C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastTreeStressTest.resources
+C:\Projects_CSharp\FastTree\Tester\obj\x86\Debug\Tester.FastListCustomize.resources
