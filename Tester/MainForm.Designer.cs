@@ -45,6 +45,8 @@
             this.label8 = new System.Windows.Forms.Label();
             this.button8 = new System.Windows.Forms.Button();
             this.groupBox1 = new System.Windows.Forms.GroupBox();
+            this.label13 = new System.Windows.Forms.Label();
+            this.button13 = new System.Windows.Forms.Button();
             this.label11 = new System.Windows.Forms.Label();
             this.button11 = new System.Windows.Forms.Button();
             this.label10 = new System.Windows.Forms.Label();
@@ -54,8 +56,6 @@
             this.button12 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
-            this.label13 = new System.Windows.Forms.Label();
-            this.button13 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -237,6 +237,25 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "FastList";
             // 
+            // label13
+            // 
+            this.label13.Location = new System.Drawing.Point(18, 345);
+            this.label13.Name = "label13";
+            this.label13.Size = new System.Drawing.Size(116, 33);
+            this.label13.TabIndex = 15;
+            this.label13.Text = "Customizing sample";
+            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button13
+            // 
+            this.button13.Location = new System.Drawing.Point(140, 349);
+            this.button13.Name = "button13";
+            this.button13.Size = new System.Drawing.Size(75, 23);
+            this.button13.TabIndex = 14;
+            this.button13.Text = "Show";
+            this.button13.UseVisualStyleBackColor = true;
+            this.button13.Click += new System.EventHandler(this.button13_Click);
+            // 
             // label11
             // 
             this.label11.Location = new System.Drawing.Point(18, 302);
@@ -331,25 +350,6 @@
             this.button9.Text = "Show";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
-            // 
-            // label13
-            // 
-            this.label13.Location = new System.Drawing.Point(18, 345);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(116, 33);
-            this.label13.TabIndex = 15;
-            this.label13.Text = "Customizing sample";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            // 
-            // button13
-            // 
-            this.button13.Location = new System.Drawing.Point(140, 349);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(75, 23);
-            this.button13.TabIndex = 14;
-            this.button13.Text = "Show";
-            this.button13.UseVisualStyleBackColor = true;
-            this.button13.Click += new System.EventHandler(this.button13_Click);
             // 
             // MainForm
             // 

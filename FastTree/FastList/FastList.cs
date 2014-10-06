@@ -156,7 +156,7 @@ namespace FastTreeNS
 
         protected override bool CanSelectItem(int itemIndex)
         {
-            return GetBoolItemProperty(itemIndex, CanSelectItemNeeded, true);
+            return GetBoolItemProperty(itemIndex, CanSelectItemNeeded, AllowSelectItems);
         }
 
         protected override bool CanUncheckItem(int itemIndex)

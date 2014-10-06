@@ -53,10 +53,12 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fl.AutoScroll = true;
-            this.fl.AutoScrollMinSize = new System.Drawing.Size(0, 190002);
+            this.fl.AutoScrollMinSize = new System.Drawing.Size(0, 200002);
             this.fl.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))), ((int)(((byte)(224)))));
             this.fl.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             this.fl.FullItemSelect = true;
+            this.fl.HotTracking = true;
+            this.fl.HotTrackingColor = System.Drawing.Color.DarkSeaGreen;
             this.fl.ImageCheckBoxOff = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOff")));
             this.fl.ImageCheckBoxOn = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOn")));
             this.fl.ImageCollapse = ((System.Drawing.Image)(resources.GetObject("fl.ImageCollapse")));
