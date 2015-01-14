@@ -20,3 +20,5 @@ Screenshots:
 ![ScreenShot](https://raw.github.com/PavelTorgashov/FastTree/master/3.png)
 ![ScreenShot](https://raw.github.com/PavelTorgashov/FastTree/master/4.png)
 
+More details: http://www.codeproject.com/Articles/820415/FastTree-and-FastList
+
