@@ -4,6 +4,11 @@
         <name>FastTree</name>
     </assembly>
     <members>
+        <member name="M:FastTreeNS.FastListBase.DrawItemIcons(System.Drawing.Graphics,FastTreeNS.FastListBase.VisibleItemInfo)">
+            <summary>
+            Draws Expand box, Check box and Icon of the Item
+            </summary>
+        </member>
         <member name="M:FastTreeNS.FastListBase.YToIndex(System.Int32)">
             <summary>
             Absolute Y coordinate of the control to item index
@@ -117,6 +122,11 @@
         <member name="P:FastTreeNS.Resources.expand">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
+            </summary>
+        </member>
+        <member name="T:FastTreeNS.FastTreeNode">
+            <summary>
+            General tree data model
             </summary>
         </member>
     </members>

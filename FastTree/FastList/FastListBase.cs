@@ -28,6 +28,8 @@ namespace FastTreeNS
         private ToolTip tt;
         private int itemCount;
         protected int currentHotTrackingIndex;
+        private bool showScrollBar;
+        private Size localAutoScrollMinSize;
 
         [Browsable(false)]
         public HashSet<int> SelectedItemIndex { get; private set; }
@@ -74,8 +76,20 @@ namespace FastTreeNS
         public bool HotTracking { get; set; }
         [DefaultValue(typeof(Color), "255, 192, 128")]
         public Color HotTrackingColor { get; set; }
-        
-        
+        [Browsable(true)]
+        [DefaultValue(true)]
+        [Description("Scollbar visibility.")]
+        public bool ShowScrollBar
+        {
+            get { return showScrollBar; }
+            set
+            { 
+                if (value == showScrollBar) return;
+                showScrollBar = value;
+                buildNeeded = true;
+                Invalidate();
+            }
+        }       
 
         [Browsable(false)]
         public override bool AutoScroll { get { return true; } }
@@ -110,6 +124,7 @@ namespace FastTreeNS
             ShowToolTips = true;
             AllowSelectItems = true;
             HotTrackingColor = Color.FromArgb(255, 192, 128);
+            showScrollBar = true;
         }
 
         public virtual int ItemCount 
@@ -1016,6 +1031,9 @@ namespace FastTreeNS
             }
         }
 
+        /// <summary>
+        /// Draws Expand box, Check box and Icon of the Item
+        /// </summary>
         public virtual void DrawItemIcons(Graphics gr, VisibleItemInfo info)
         {
             if (info.ExpandBoxVisible)
@@ -1210,7 +1228,8 @@ namespace FastTreeNS
 
             public virtual void Calc(FastListBase list, int itemIndex, Graphics gr)
             {
-                var vertScroll = list.VerticalScroll.Visible ? list.VerticalScroll.Value : 0;
+                //var vertScroll = list.VerticalScroll.Visible ? list.VerticalScroll.Value : 0;
+                var vertScroll = list.VerticalScroll.Value ;//!!!!!!!!!!!!
 
                 ItemIndex = itemIndex;
                 CheckBoxVisible = list.ShowCheckBoxes && list.GetItemCheckBoxVisible(itemIndex);
@@ -1363,51 +1382,55 @@ namespace FastTreeNS
 
         protected virtual void ScrollUp()
         {
-            if (!VerticalScroll.Visible)
-                return;
-            VerticalScroll.Value = Math.Max(VerticalScroll.Minimum, VerticalScroll.Value - VerticalScroll.SmallChange);
-            UpdateScrollbars();
-            Invalidate();
+            OnScrollVertical(VerticalScroll.Value - VerticalScroll.SmallChange);
         }
 
         protected virtual void ScrollDown()
         {
-            if (!VerticalScroll.Visible)
-                return;
-            VerticalScroll.Value = Math.Min(VerticalScroll.Maximum, VerticalScroll.Value + VerticalScroll.SmallChange);
-            UpdateScrollbars();
-            Invalidate();
+            OnScrollVertical(VerticalScroll.Value + VerticalScroll.SmallChange);
         }
 
         protected virtual void ScrollPageUp()
         {
-            if (!VerticalScroll.Visible)
-                return;
-            VerticalScroll.Value = Math.Max(VerticalScroll.Minimum, VerticalScroll.Value - VerticalScroll.LargeChange);
-            UpdateScrollbars();
-            Invalidate();
+            OnScrollVertical(VerticalScroll.Value - VerticalScroll.LargeChange);
         }
 
         protected virtual void ScrollPageDown()
         {
-            if (!VerticalScroll.Visible)
-                return;
-            VerticalScroll.Value = Math.Min(VerticalScroll.Maximum, VerticalScroll.Value + VerticalScroll.LargeChange);
-            UpdateScrollbars();
-            Invalidate();
+            OnScrollVertical(VerticalScroll.Value + VerticalScroll.LargeChange);
         }
 
-        protected new Size AutoScrollMinSize
+        public new Size AutoScrollMinSize
         {
             set
             {
-                if (!base.AutoScroll)
-                    base.AutoScroll = true;
-                Size newSize = value;
-                base.AutoScrollMinSize = newSize;
+                if (showScrollBar)
+                {
+                    if (!base.AutoScroll)
+                        base.AutoScroll = true;
+                    Size newSize = value;
+                    base.AutoScrollMinSize = newSize;
+                }
+                else
+                {
+                    if (base.AutoScroll)
+                        base.AutoScroll = false;
+                    base.AutoScrollMinSize = new Size(0, 0);
+                    VerticalScroll.Visible = false;
+                    HorizontalScroll.Visible = false;
+                    VerticalScroll.Maximum = Math.Max(0, value.Height - ClientSize.Height);
+                    HorizontalScroll.Maximum = Math.Max(0, value.Width - ClientSize.Width);
+                    localAutoScrollMinSize = value;
+                }
             }
 
-            get { return base.AutoScrollMinSize; }
+            get
+            {
+                if (showScrollBar)
+                    return base.AutoScrollMinSize;
+                else
+                    return localAutoScrollMinSize;
+            }
         }
 
         /// <summary>
@@ -1415,9 +1438,21 @@ namespace FastTreeNS
         /// </summary>
         public void UpdateScrollbars()
         {
-            //some magic for update scrolls
-            base.AutoScrollMinSize -= new Size(1, 0);
-            base.AutoScrollMinSize += new Size(1, 0);
+            if (ShowScrollBar)
+            {
+                //some magic for update scrolls
+                base.AutoScrollMinSize -= new Size(1, 0);
+                base.AutoScrollMinSize += new Size(1, 0);
+            }
+            else
+                AutoScrollMinSize = AutoScrollMinSize;
+
+            if (IsHandleCreated)
+                BeginInvoke((MethodInvoker)OnScrollbarsUpdated);
+        }
+
+        protected virtual void OnScrollbarsUpdated()
+        {
         }
 
         private const int WM_HSCROLL = 0x114;
@@ -1455,18 +1490,12 @@ namespace FastTreeNS
             //
             try
             {
-                if (VerticalScroll.Visible)
-                    VerticalScroll.Value = Math.Min(v, VerticalScroll.Maximum);
-                if (HorizontalScroll.Visible)
-                    HorizontalScroll.Value = Math.Min(h, HorizontalScroll.Maximum);
+                OnScrollVertical(v);
             }
             catch (ArgumentOutOfRangeException)
             {
                 ;
             }
-
-            UpdateScrollbars();
-            Invalidate();
         }
 
         public void ScrollToItem(int itemIndex)
@@ -1477,6 +1506,22 @@ namespace FastTreeNS
             var y = GetItemY(itemIndex);
             var height = GetItemHeight(itemIndex);
             ScrollToRectangle(new Rectangle(0, y, ClientRectangle.Width, height));
+        }
+
+        public void OnScrollVertical(int newVerticalScrollBarValue)
+        {
+            OnScroll(new ScrollEventArgs(ScrollEventType.ThumbPosition, newVerticalScrollBarValue, ScrollOrientation.VerticalScroll));
+        }
+
+        protected override void OnScroll(ScrollEventArgs se)
+        {
+            if (se.ScrollOrientation == ScrollOrientation.VerticalScroll)
+                VerticalScroll.Value = Math.Max(VerticalScroll.Minimum, Math.Min(VerticalScroll.Maximum, se.NewValue));
+
+            UpdateScrollbars();
+            Invalidate();
+            //
+            base.OnScroll(se);
         }
 
         #endregion

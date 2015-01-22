@@ -49,6 +49,7 @@
     <Compile Include="FastTree\FastTree.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Compile Include="FastTreeModel\FastTreeNode.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Resources.Designer.cs">
       <AutoGen>True</AutoGen>

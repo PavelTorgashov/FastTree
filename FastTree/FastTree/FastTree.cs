@@ -604,6 +604,18 @@ namespace FastTreeNS
             return nodes.IndexOf(node);
         }
 
+        public virtual bool ScrollToNode(object node)
+        {
+            var itemIndex = GetItemIndexOfNode(node);
+            if (itemIndex < 0 || itemIndex >= ItemCount)
+                return false;
+
+            var y = GetItemY(itemIndex);
+            var height = GetItemHeight(itemIndex);
+            ScrollToRectangle(new Rectangle(0, y, ClientRectangle.Width, height));
+            return true;
+        }
+
         #endregion
 
         #region Overrided methods

@@ -30,10 +30,17 @@
         {
             this.components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(FastListCustomize));
+            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.propertyGrid1 = new System.Windows.Forms.PropertyGrid();
             this.fl = new FastTreeNS.FastList();
-            this.imageList1 = new System.Windows.Forms.ImageList(this.components);
             this.SuspendLayout();
+            // 
+            // imageList1
+            // 
+            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
+            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
+            this.imageList1.Images.SetKeyName(0, "folder.png");
+            this.imageList1.Images.SetKeyName(1, "play_button_blue_16_2.png");
             // 
             // propertyGrid1
             // 
@@ -81,13 +88,6 @@
             this.fl.ItemBackColorNeeded += new System.EventHandler<FastTreeNS.ColorItemEventArgs>(this.fl_ItemBackColorNeeded);
             this.fl.ItemForeColorNeeded += new System.EventHandler<FastTreeNS.ColorItemEventArgs>(this.fl_ItemForeColorNeeded);
             this.fl.PaintItem += new System.EventHandler<FastTreeNS.PaintItemContentEventArgs>(this.fl_PaintItem);
-            // 
-            // imageList1
-            // 
-            this.imageList1.ImageStream = ((System.Windows.Forms.ImageListStreamer)(resources.GetObject("imageList1.ImageStream")));
-            this.imageList1.TransparentColor = System.Drawing.Color.Transparent;
-            this.imageList1.Images.SetKeyName(0, "folder.png");
-            this.imageList1.Images.SetKeyName(1, "play_button_blue_16_2.png");
             // 
             // FastListCustomize
             // 

@@ -88,6 +88,7 @@ namespace FastTreeNS
         public event EventHandler<ItemSelectedStateChangedEventArgs> ItemSelectedStateChanged;
 
         public event EventHandler<PaintItemContentEventArgs> PaintItem;
+        public event EventHandler ScrollbarsUpdated;
 
         /// <summary>
         /// Occurs when user start to drag items
@@ -259,6 +260,13 @@ namespace FastTreeNS
                 DropOverItem(this, e);
 
             base.OnDropOverItem(e);
+        }
+
+        protected override void  OnScrollbarsUpdated()
+        {
+            if (ScrollbarsUpdated != null)
+                ScrollbarsUpdated(this, EventArgs.Empty);
+ 	         base.OnScrollbarsUpdated();
         }
 
         #endregion

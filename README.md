@@ -21,4 +21,5 @@ Screenshots:
 ![ScreenShot](https://raw.github.com/PavelTorgashov/FastTree/master/4.png)
 
 More details: http://www.codeproject.com/Articles/820415/FastTree-and-FastList
+Nuget package: https://www.nuget.org/packages/FastTree/
 
