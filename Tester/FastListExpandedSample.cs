@@ -54,7 +54,7 @@ namespace Tester
                 //custom drawing
                 var rect = new Rectangle(e.Info.X_Text, e.Info.Y, e.Info.X_End - e.Info.X_Text + 1, e.Info.Height);
 
-                using (var brush = new SolidBrush(Color.PapayaWhip))
+                using (var brush = new SolidBrush(Color.WhiteSmoke))
                     e.Graphics.FillRectangle(brush, rect);
 
                 using (var pen = new Pen(Color.Navy))

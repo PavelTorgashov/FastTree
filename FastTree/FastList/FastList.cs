@@ -11,6 +11,7 @@
 //  Copyright (C) Pavel Torgashov, 2014. 
 
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -31,8 +32,26 @@ namespace FastTreeNS
             {
                 ItemCount = 100;
                 ItemTextNeeded += (o, a) => a.Result = "Item " + a.ItemIndex;
-                SelectedItemIndex.Add(0);
+                SelectedItemIndexes.Add(0);
             }
+        }
+
+        public void Build(int itemCount)
+        {
+            ItemCount = itemCount;
+        }
+
+        public void Rebuild()
+        {
+            Invalidate();
+        }
+
+        public void Build(ICollection list)
+        {
+            if (list == null)
+                ItemCount = 0;
+            else
+                ItemCount = list.Count;
         }
 
         #region Overrided methods

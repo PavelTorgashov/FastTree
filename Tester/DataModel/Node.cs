@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Generic;
 
 namespace Tester.DataModel
 {
+    /// <summary>
+    /// Warning!!!
+    /// This class is needed only for demonstration of features of FastTree.
+    /// In real life you need to use own class of your data model.
+    /// </summary>
     public class Node : IEnumerable<Node>
     {
         public string Title { get; set; }

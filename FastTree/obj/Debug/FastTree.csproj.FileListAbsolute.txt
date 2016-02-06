@@ -1,9 +1,8 @@
 C:\Projects_CSharp\FastTree\FastTree\bin\Debug\FastTree.dll
 C:\Projects_CSharp\FastTree\FastTree\bin\Debug\FastTree.pdb
-C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.dll
-C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.pdb
+C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTreeNS.FastListBase.resources
 C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTreeNS.Resources.resources
 C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.csproj.GenerateResource.Cache
-C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTreeNS.FastListBase.resources
+C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.dll
+C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.pdb
 C:\Projects_CSharp\FastTree\FastTree\obj\Debug\FastTree.csprojResolveAssemblyReference.cache
-C:\Projects_CSharp\FastTree\FastTree\bin\Debug\FastTree.XML

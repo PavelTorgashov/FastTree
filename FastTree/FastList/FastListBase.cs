@@ -8,7 +8,7 @@
 //
 //  Email: pavel_torgashov@ukr.net.
 //
-//  Copyright (C) Pavel Torgashov, 2014. 
+//  Copyright (C) Pavel Torgashov, 2014-2015. 
 
 using System;
 using System.Collections.Generic;
@@ -32,7 +32,9 @@ namespace FastTreeNS
         private Size localAutoScrollMinSize;
 
         [Browsable(false)]
-        public HashSet<int> SelectedItemIndex { get; private set; }
+        public HashSet<int> SelectedItemIndexes { get; private set; }
+        [Browsable(false)]
+        public int SelectedItemIndex{get { return SelectedItemIndexes.Count == 0 ? -1 : SelectedItemIndexes.First(); }}
         [Browsable(false)]
         public HashSet<int> CheckedItemIndex { get; private set; }
 
@@ -52,10 +54,13 @@ namespace FastTreeNS
         public bool ShowCheckBoxes { get; set; }
         [DefaultValue(false)]
         public bool ShowExpandBoxes { get; set; }
+        [DefaultValue(true)]
+        public bool ShowEmptyExpandBoxes { get; set; }
         public virtual Image ImageCheckBoxOn { get; set; }
         public virtual Image ImageCheckBoxOff { get; set; }
         public virtual Image ImageCollapse { get; set; }
         public virtual Image ImageExpand { get; set; }
+        public virtual Image ImageEmptyExpand { get; set; }
         public virtual Image ImageDefaultIcon { get; set; }
 
         [DefaultValue(typeof(Color), "33, 53, 80")]
@@ -100,7 +105,7 @@ namespace FastTreeNS
 
             tt = new ToolTip() {UseAnimation = false };
 
-            SelectedItemIndex = new HashSet<int>();
+            SelectedItemIndexes = new HashSet<int>();
             CheckedItemIndex = new HashSet<int>();
             InitDefaultProperties();
         }
@@ -115,6 +120,7 @@ namespace FastTreeNS
             ImageCheckBoxOff = Resources.checkbox_no;
             ImageCollapse = Resources.collapse;
             ImageExpand = Resources.expand;
+            ImageEmptyExpand = Resources.empty;
             ImageDefaultIcon = Resources.default_icon;
             SelectionColor = Color.FromArgb(33, 53, 80);
             SelectionColorOpaque = 100;
@@ -123,6 +129,7 @@ namespace FastTreeNS
             ItemIndentDefault = 10;
             ShowToolTips = true;
             AllowSelectItems = true;
+            ShowEmptyExpandBoxes = true;
             HotTrackingColor = Color.FromArgb(255, 192, 128);
             showScrollBar = true;
         }
@@ -305,9 +312,9 @@ namespace FastTreeNS
                     if (e.Control)
                         ScrollPageUp();
                     else
-                    if (SelectedItemIndex.Count > 0)
+                    if (SelectedItemIndexes.Count > 0)
                     {
-                        var i = SelectedItemIndex.First();
+                        var i = SelectedItemIndexes.First();
                         var y = GetItemY(i) - ClientRectMinusPaddings.Height;
                         i = YToIndex(y) + 1;
                         SelectItem(Math.Max(0, Math.Min(ItemCount - 1, i)));
@@ -318,9 +325,9 @@ namespace FastTreeNS
                     if (e.Control)
                         ScrollPageDown();
                     else
-                    if (SelectedItemIndex.Count > 0)
+                    if (SelectedItemIndexes.Count > 0)
                     {
-                        var i = SelectedItemIndex.First();
+                        var i = SelectedItemIndexes.First();
                         var y = GetItemY(i) + ClientRectMinusPaddings.Height;
                         i = YToIndex(y);
                         SelectItem(i < 0 ? ItemCount - 1 : i);
@@ -345,9 +352,9 @@ namespace FastTreeNS
                 case Keys.Space:
                     if (ShowCheckBoxes)
                     {
-                        if (SelectedItemIndex.Count > 0)
+                        if (SelectedItemIndexes.Count > 0)
                         {
-                            var val = GetItemChecked(SelectedItemIndex.First());
+                            var val = GetItemChecked(SelectedItemIndexes.First());
                             if (val)
                                 UncheckSelected();
                             else
@@ -356,9 +363,9 @@ namespace FastTreeNS
                     }else
                     if(ShowExpandBoxes)
                     {
-                        if (SelectedItemIndex.Count > 0)
+                        if (SelectedItemIndexes.Count > 0)
                         {
-                            var itemIndex = SelectedItemIndex.First();
+                            var itemIndex = SelectedItemIndexes.First();
                             if (GetItemExpanded(itemIndex))
                                 CollapseItem(itemIndex);
                             else
@@ -443,7 +450,7 @@ namespace FastTreeNS
 
                 if (Control.ModifierKeys == Keys.Control)
                 {
-                    if (SelectedItemIndex.Contains(item.ItemIndex) && SelectedItemIndex.Count > 1)
+                    if (SelectedItemIndexes.Contains(item.ItemIndex) && SelectedItemIndexes.Count > 1)
                         UnselectItem(item.ItemIndex);
                     else
                         SelectItem(item.ItemIndex, false);
@@ -452,8 +459,8 @@ namespace FastTreeNS
                 }
                 else if (Control.ModifierKeys == Keys.Shift)
                 {
-                    if (SelectedItemIndex.Count == 1)
-                        startDiapasonSelectedItemIndex = SelectedItemIndex.First();
+                    if (SelectedItemIndexes.Count == 1)
+                        startDiapasonSelectedItemIndex = SelectedItemIndexes.First();
 
                     if (startDiapasonSelectedItemIndex >= 0)
                         SelectItems(Math.Min(startDiapasonSelectedItemIndex, item.ItemIndex),
@@ -462,7 +469,7 @@ namespace FastTreeNS
             }
 
             if (!MultiSelect || Control.ModifierKeys == Keys.None)
-                if (!SelectedItemIndex.Contains(item.ItemIndex) || SelectedItemIndex.Count > 1)
+                if (!SelectedItemIndexes.Contains(item.ItemIndex) || SelectedItemIndexes.Count > 1)
                     SelectItem(item.ItemIndex, true);
 
             Invalidate();
@@ -499,9 +506,9 @@ namespace FastTreeNS
                     mouseSelectArea = Rectangle.Empty;
             }
             else
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && SelectedItemIndex.Count > 0 && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && SelectedItemIndexes.Count > 0 && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
             {
-                OnItemDrag(new HashSet<int>(SelectedItemIndex));
+                OnItemDrag(new HashSet<int>(SelectedItemIndexes));
             }else
             if(e.Button == System.Windows.Forms.MouseButtons.None)
             {
@@ -700,13 +707,13 @@ namespace FastTreeNS
 
         protected virtual void CheckSelected()
         {
-            foreach (var i in SelectedItemIndex)
+            foreach (var i in SelectedItemIndexes)
                 CheckItem(i);
         }
 
         protected virtual void UncheckSelected()
         {
-            foreach (var i in SelectedItemIndex)
+            foreach (var i in SelectedItemIndexes)
                 UncheckItem(i);
         }
 
@@ -719,13 +726,13 @@ namespace FastTreeNS
             if (itemIndex < 0 || itemIndex >= ItemCount)
                 return false;
 
-            if (!SelectedItemIndex.Contains(itemIndex))
+            if (!SelectedItemIndexes.Contains(itemIndex))
                 return true;
 
             if (!CanUnselectItem(itemIndex))
                 return false;
 
-            SelectedItemIndex.Remove(itemIndex);
+            SelectedItemIndexes.Remove(itemIndex);
             OnItemUnselected(itemIndex);
 
             return true;
@@ -733,13 +740,13 @@ namespace FastTreeNS
 
         public virtual bool UnselectAll()
         {
-            foreach(var i in SelectedItemIndex)
+            foreach(var i in SelectedItemIndexes)
             if (!CanUnselectItem(i))
                 return false;
 
-            var list = new List<int>(SelectedItemIndex);
+            var list = new List<int>(SelectedItemIndexes);
 
-            SelectedItemIndex.Clear();
+            SelectedItemIndexes.Clear();
 
             foreach (var i in list)
                 OnItemUnselected(i);
@@ -757,25 +764,28 @@ namespace FastTreeNS
             if (!CanSelectItem(itemIndex))
                 return false;
 
-            var contains = SelectedItemIndex.Contains(itemIndex);
+            var contains = SelectedItemIndexes.Contains(itemIndex);
 
             if(unselectOtherItems)
             {
-                foreach (var i in SelectedItemIndex)
+                foreach (var i in SelectedItemIndexes)
                     if(i != itemIndex)
                     if (!CanUnselectItem(i))
                         return false;
 
-                var list = new List<int>(SelectedItemIndex);
+                var list = new List<int>(SelectedItemIndexes);
 
-                SelectedItemIndex.Clear();
+                //SelectedItemIndexes.Clear();
 
                 foreach (var i in list)
                     if (i != itemIndex)
+                    {
+                        SelectedItemIndexes.Remove(i);
                         OnItemUnselected(i);
+                    }
             }
 
-            SelectedItemIndex.Add(itemIndex);
+            SelectedItemIndexes.Add(itemIndex);
 
             if (!contains)
                 OnItemSelected(itemIndex);
@@ -787,30 +797,33 @@ namespace FastTreeNS
 
         public virtual bool SelectItems(int from, int to)
         {
-            foreach (var i in SelectedItemIndex)
+            foreach (var i in SelectedItemIndexes)
                 if (i < from || i > to)
                     if (!CanUnselectItem(i))
                         return false;
 
-            var list = new List<int>(SelectedItemIndex);
+            var list = new List<int>(SelectedItemIndexes);
 
-            SelectedItemIndex.RemoveWhere(i=> i < from | i > to);
+            //SelectedItemIndexes.RemoveWhere(i=> i < from | i > to);
 
             foreach (var i in list)
                 if (i < from || i > to)
+                {
+                    SelectedItemIndexes.Remove(i);
                     OnItemUnselected(i);
+                }
 
             for(int i=from;i<=to;i++)
-            if(!SelectedItemIndex.Contains(i))
+            if(!SelectedItemIndexes.Contains(i))
             if(CanSelectItem(i))
             {
-                SelectedItemIndex.Add(i);
+                SelectedItemIndexes.Add(i);
                 OnItemSelected(i);
             }
 
             Invalidate();
 
-            return SelectedItemIndex.Count > 0;
+            return SelectedItemIndexes.Count > 0;
         }
 
         public virtual bool SelectAll()
@@ -820,10 +833,10 @@ namespace FastTreeNS
 
         public bool SelectNext(bool unselectOtherItems = true)
         {
-            if (SelectedItemIndex.Count == 0)
+            if (SelectedItemIndexes.Count == 0)
                 return false;
 
-            var index = SelectedItemIndex.Max() + 1;
+            var index = SelectedItemIndexes.Max() + 1;
             if (index >= ItemCount)
                 return false;
 
@@ -836,10 +849,10 @@ namespace FastTreeNS
 
         public bool SelectPrev(bool unselectOtherItems = true)
         {
-            if (SelectedItemIndex.Count == 0)
+            if (SelectedItemIndexes.Count == 0)
                 return false;
 
-            var index = SelectedItemIndex.Min() - 1;
+            var index = SelectedItemIndexes.Min() - 1;
             if (index < 0)
                 return false;
 
@@ -971,7 +984,7 @@ namespace FastTreeNS
             DrawItemBackgound(gr, info);
 
             if (lastDragAndDropEffect == null) //do not draw selection when drag&drop over the control
-                if (SelectedItemIndex.Contains(info.ItemIndex))
+                if (SelectedItemIndexes.Contains(info.ItemIndex))
                     DrawSelection(gr, info);
 
             if (HotTracking && info.ItemIndex == currentHotTrackingIndex)
@@ -1036,11 +1049,11 @@ namespace FastTreeNS
         /// </summary>
         public virtual void DrawItemIcons(Graphics gr, VisibleItemInfo info)
         {
-            if (info.ExpandBoxVisible)
+            if (info.ExpandBoxType > 0)
             {
-                var img = (Bitmap)(info.Expanded ? ImageCollapse : ImageExpand);
+                var img = (Bitmap)(info.ExpandBoxType == 2 ? ImageEmptyExpand :  (info.Expanded ? ImageCollapse : ImageExpand));
                 img.SetResolution(gr.DpiX, gr.DpiY);
-                gr.DrawImage(img, info.X_ExpandBox, info.Y);
+                gr.DrawImage(img, info.X_ExpandBox, info.Y + 1);
             }
 
             if (info.CheckBoxVisible)
@@ -1205,7 +1218,7 @@ namespace FastTreeNS
             public int X_EndText;
             public int X_End;
             public bool CheckBoxVisible;
-            public bool ExpandBoxVisible;
+            public int ExpandBoxType;
             public Image Icon;
             public bool Expanded;
             public Color ForeColor;
@@ -1239,7 +1252,8 @@ namespace FastTreeNS
                 Height = list.GetItemY(itemIndex + 1) - y - list.ItemInterval;
                 Text = list.GetItemText(itemIndex) ?? "";
                 Expanded = list.GetItemExpanded(itemIndex);
-                ExpandBoxVisible = list.ShowExpandBoxes && (Expanded ? list.CanCollapseItem(itemIndex) : list.CanExpandItem(itemIndex));
+                var temp = list.ShowEmptyExpandBoxes ? 2 : 0;
+                ExpandBoxType = list.ShowExpandBoxes ? (Expanded ? (list.CanCollapseItem(itemIndex) ? 1 : temp) : (list.CanExpandItem(itemIndex) ? 1 : temp)) : 0;
                 BackColor = list.GetItemBackColor(itemIndex);
                 ForeColor = list.GetItemForeColor(itemIndex);
 
@@ -1283,7 +1297,7 @@ namespace FastTreeNS
             }
 
 
-            SelectedItemIndex.RemoveWhere(i => i >= itemCount);
+            SelectedItemIndexes.RemoveWhere(i => i >= itemCount);
             CheckedItemIndex.RemoveWhere(i => i >= itemCount);
 
             AutoScrollMinSize = new Size(AutoScrollMinSize.Width, y + Padding.Bottom + 2);

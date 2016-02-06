@@ -34,7 +34,10 @@ namespace FastTreeNS
         public IEnumerable<object> ExpandedNodes { get { return expandedNodes; } }
 
         [Browsable(false)]
-        public IEnumerable<object> SelectedNodes { get { return SelectedItemIndex.OrderBy(i => i).Select(i => nodes[i]); } }
+        public IEnumerable<object> SelectedNodes { get { return SelectedItemIndexes.OrderBy(i => i).Select(i => nodes[i]); } }
+
+        [Browsable(false)]
+        public object SelectedNode { get { return SelectedNodes.FirstOrDefault(); } }
 
         [Browsable(false)]
         public IEnumerable<object> CheckedNodes { get { return CheckedItemIndex.OrderBy(i => i).Select(i => nodes[i]); } }
@@ -75,7 +78,7 @@ namespace FastTreeNS
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
             {
                 Build(new object[] { "Node 1", "Node 2", "Node 3" });
-                SelectedItemIndex.Add(0);
+                SelectedItemIndexes.Add(0);
             }
         }
 
@@ -297,7 +300,7 @@ namespace FastTreeNS
             var selected = new HashSet<object>();
             var check = new HashSet<object>();
 
-            foreach (var i in SelectedItemIndex)
+            foreach (var i in SelectedItemIndexes)
                 selected.Add(nodes[i]);
 
             foreach (var i in CheckedItemIndex)
@@ -306,7 +309,7 @@ namespace FastTreeNS
             //
             nodes.Clear();
             levels.Clear();
-            SelectedItemIndex.Clear();
+            SelectedItemIndexes.Clear();
             CheckedItemIndex.Clear();
 
             //build list of expanded nodes
@@ -321,7 +324,7 @@ namespace FastTreeNS
             for (int i = 0; i < nodes.Count;i++)
             {
                 var node = nodes[i];
-                if (selected.Contains(node)) SelectedItemIndex.Add(i);
+                if (selected.Contains(node)) SelectedItemIndexes.Add(i);
                 if (check.Contains(node)) CheckedItemIndex.Add(i);
                 if (expandedNodes.Contains(node)) newExpanded.Add(node);
                 hasChildren[i] = GetNodeChildren(nodes[i]).Cast<object>().Any();
@@ -330,6 +333,12 @@ namespace FastTreeNS
             expandedNodes = newExpanded;
             ItemCount = nodes.Count;
             base.Build();
+        }
+
+        public void Rebuild()
+        {
+            if(root != null)
+                Build(root);
         }
 
         private void AddNode(object node, int level)
@@ -362,6 +371,7 @@ namespace FastTreeNS
             }else
             if(node is IEnumerable)
             {
+                if (!(node is string))
                 foreach (var child in node as IEnumerable)
                     yield return child;
             }
@@ -420,7 +430,7 @@ namespace FastTreeNS
                     return true;
 
                 //check selection, checked
-                foreach (var j in SelectedItemIndex)
+                foreach (var j in SelectedItemIndexes)
                     if (j >= from && j <= to)
                         if (!CanUnselectItem(j))
                             return false;
@@ -480,7 +490,7 @@ namespace FastTreeNS
 
         public virtual bool IsNodeSelected(object node)
         {
-            return SelectedItemIndex.Contains(nodes.IndexOf(node));
+            return SelectedItemIndexes.Contains(nodes.IndexOf(node));
         }
 
         public virtual bool IsNodeChecked(object node)

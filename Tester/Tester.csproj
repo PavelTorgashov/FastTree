@@ -84,7 +84,7 @@
     <Compile Include="FastTreeFileExplorerSample.Designer.cs">
       <DependentUpon>FastTreeFileExplorerSample.cs</DependentUpon>
     </Compile>
-    <Compile Include="DataModel\TreeNode.cs" />
+    <Compile Include="DataModel\Node.cs" />
     <Compile Include="FastTreeSimplestSample.cs">
       <SubType>Form</SubType>
     </Compile>

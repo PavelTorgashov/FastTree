@@ -53,11 +53,6 @@
             this.ft.AutoScroll = true;
             this.ft.AutoScrollMinSize = new System.Drawing.Size(0, 62);
             this.ft.BackColor = System.Drawing.SystemColors.Window;
-            this.ft.ImageCheckBoxOff = ((System.Drawing.Image)(resources.GetObject("ft.ImageCheckBoxOff")));
-            this.ft.ImageCheckBoxOn = ((System.Drawing.Image)(resources.GetObject("ft.ImageCheckBoxOn")));
-            this.ft.ImageCollapse = ((System.Drawing.Image)(resources.GetObject("ft.ImageCollapse")));
-            this.ft.ImageDefaultIcon = ((System.Drawing.Image)(resources.GetObject("ft.ImageDefaultIcon")));
-            this.ft.ImageExpand = ((System.Drawing.Image)(resources.GetObject("ft.ImageExpand")));
             this.ft.IsEditMode = false;
             this.ft.ItemCount = 3;
             this.ft.Location = new System.Drawing.Point(12, 14);

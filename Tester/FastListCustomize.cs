@@ -76,7 +76,7 @@ namespace Tester
                 //draw default background
                 fl.DrawItemBackgound(e.Graphics, e.Info);
                 //draw default selection
-                if (fl.SelectedItemIndex.Contains(e.Info.ItemIndex))
+                if (fl.SelectedItemIndexes.Contains(e.Info.ItemIndex))
                     fl.DrawSelection(e.Graphics, e.Info);
                 //draw icon
                 fl.DrawItemIcons(e.Graphics, e.Info);
