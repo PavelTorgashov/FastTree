@@ -15,6 +15,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -41,6 +42,9 @@ namespace FastTreeNS
 
         [Browsable(false)]
         public IEnumerable<object> CheckedNodes { get { return CheckedItemIndex.OrderBy(i => i).Select(i => nodes[i]); } }
+
+        [DefaultValue(true)]
+        public bool UncheckChildWhenCollapsed { get; set; }
 
         /// <summary>
         /// List of all visible nodes
@@ -73,6 +77,7 @@ namespace FastTreeNS
             AutoCollapse = true;
             ShowRootNode = false;
             ShowExpandBoxes = true;
+            UncheckChildWhenCollapsed = true;
             ItemIndentDefault = 16;
 
             if (LicenseManager.UsageMode == LicenseUsageMode.Designtime)
@@ -88,6 +93,7 @@ namespace FastTreeNS
         public event EventHandler<StringNodeEventArgs> NodeTextNeeded;
         public event EventHandler<BoolNodeEventArgs> NodeCheckStateNeeded;
         public event EventHandler<ImageNodeEventArgs> NodeIconNeeded;
+        public event EventHandler<StringAlignmentNodeEventArgs> NodeLineAlignmentNeeded;
         public event EventHandler<BoolNodeEventArgs> NodeCheckBoxVisibleNeeded;
         public event EventHandler<ColorNodeEventArgs> NodeBackColorNeeded;
         public event EventHandler<IntNodeEventArgs> NodeIndentNeeded;
@@ -99,10 +105,12 @@ namespace FastTreeNS
         public event EventHandler<BoolNodeEventArgs> CanCheckNodeNeeded;
         public event EventHandler<BoolNodeEventArgs> CanExpandNodeNeeded;
         public event EventHandler<BoolNodeEventArgs> CanCollapseNodeNeeded;
+        public event EventHandler<BoolNodeEventArgs> CanEditNodeNeeded;
         
         public event EventHandler<NodeCheckedStateChangedEventArgs> NodeCheckedStateChanged;
         public event EventHandler<NodeExpandedStateChangedEventArgs> NodeExpandedStateChanged;
         public event EventHandler<NodeSelectedStateChangedEventArgs> NodeSelectedStateChanged;
+        public event EventHandler<NodeTextPushedEventArgs> NodeTextPushed;
         
         public event EventHandler<PaintNodeContentEventArgs> PaintNode;
 
@@ -150,6 +158,12 @@ namespace FastTreeNS
             return GetImageNodeProperty(itemIndex, NodeIconNeeded, ImageDefaultIcon);
         }
 
+        protected override StringAlignment GetItemLineAlignment(int itemIndex)
+        {
+            return GetLineAlignmentNodeProperty(itemIndex, NodeLineAlignmentNeeded, ItemLineAlignmentDefault);
+        }
+
+
         protected override int GetItemHeight(int itemIndex)
         {
             return GetIntNodeProperty(itemIndex, NodeHeightNeeded, ItemHeightDefault);
@@ -195,6 +209,11 @@ namespace FastTreeNS
             return GetBoolNodeProperty(itemIndex, CanCollapseNodeNeeded, true);
         }
 
+        protected override bool CanEditItem(int itemIndex)
+        {
+            return GetBoolNodeProperty(itemIndex, CanEditNodeNeeded, true);
+        }
+
         protected override void OnItemChecked(int itemIndex)
         {
             if (NodeCheckedStateChanged != null)
@@ -209,6 +228,14 @@ namespace FastTreeNS
                 NodeCheckedStateChanged(this, new NodeCheckedStateChangedEventArgs { Node = nodes[itemIndex], Checked = false });
 
             base.OnItemUnchecked(itemIndex);
+        }
+
+        protected override void OnItemTextPushed(int itemIndex, string text)
+        {
+            if (NodeTextPushed != null)
+                NodeTextPushed(this, new NodeTextPushedEventArgs { Node = nodes[itemIndex], Text = text });
+
+            base.OnItemTextPushed(itemIndex, text);
         }
 
         protected override void OnItemExpanded(int itemIndex)
@@ -387,6 +414,11 @@ namespace FastTreeNS
             return nodes[index];
         }
 
+        public virtual int GetItemLevel(int index)
+        {
+            return levels[index];
+        }
+
         public override bool ExpandItem(int itemIndex)
         {
             if (itemIndex < 0 || itemIndex >= nodes.Count)
@@ -404,6 +436,14 @@ namespace FastTreeNS
             }
 
             return false;
+        }
+
+        public virtual void ExpandNodesUnsafe(IEnumerable<object> nodes)
+        {
+            foreach(var node in nodes)
+                expandedNodes.Add(node);
+            BuildNeeded();
+            Invalidate();
         }
 
         public override bool CollapseItem(int itemIndex)
@@ -449,7 +489,8 @@ namespace FastTreeNS
                 for (int j = from; j <= to; j++)
                 {
                     UnselectItem(j);
-                    UncheckItem(j);
+                    if(UncheckChildWhenCollapsed)
+                        UncheckItem(j);
                     if (expandedNodes.Contains(nodes[j]))
                     {
                         expandedNodes.Remove(nodes[j]);
@@ -614,7 +655,7 @@ namespace FastTreeNS
             return nodes.IndexOf(node);
         }
 
-        public virtual bool ScrollToNode(object node)
+        public virtual bool ScrollToNode(object node, bool tryToCenter = false)
         {
             var itemIndex = GetItemIndexOfNode(node);
             if (itemIndex < 0 || itemIndex >= ItemCount)
@@ -622,6 +663,11 @@ namespace FastTreeNS
 
             var y = GetItemY(itemIndex);
             var height = GetItemHeight(itemIndex);
+            if (tryToCenter)
+            {
+                y -= ClientSize.Height/2 - 10;
+                height += ClientSize.Height - 10;
+            }
             ScrollToRectangle(new Rectangle(0, y, ClientRectangle.Width, height));
             return true;
         }
@@ -630,7 +676,7 @@ namespace FastTreeNS
 
         #region Overrided methods
 
-        protected override int GetItemIndent(int itemIndex)
+        public override int GetItemIndent(int itemIndex)
         {
             return GetIntNodeProperty(itemIndex, NodeIndentNeeded, levels[itemIndex] * ItemIndentDefault);
         }
@@ -645,6 +691,10 @@ namespace FastTreeNS
             return GetBoolNodeProperty(itemIndex, CanExpandNodeNeeded, hasChildren[itemIndex]);
         }
 
+        /// <summary>
+        /// This method is used only for programmatically expanding.
+        /// For GUI expanding - use CanExpandItem
+        /// </summary>
         protected virtual bool CanExpandNode(object node)
         {
             if (CanExpandNodeNeeded != null)
@@ -684,6 +734,73 @@ namespace FastTreeNS
             }
         }
 
+        protected override void DrawDragOverInsertEffect(Graphics gr, DragOverItemEventArgs e)
+        {
+            var c1 = Color.FromArgb(255, SelectionColor);
+            var c2 = Color.Transparent;
+            var c3 = BackColor;
+
+            if (!visibleItemInfos.ContainsKey(e.ItemIndex))
+                return;
+
+            gr.ResetClip();
+            var info = visibleItemInfos[e.ItemIndex];
+            var rect = new Rectangle(info.X_ExpandBox + 1, info.Y, 10000, info.Height);
+            if (e.ItemIndex <= 0)
+                rect.Offset(0, 2);
+
+            switch (e.InsertEffect)
+            {
+                case InsertEffect.Replace:
+                    using (var brush = new SolidBrush(c1))
+                        gr.FillRectangle(brush, rect);
+                    break;
+
+                case InsertEffect.InsertBefore:
+                    rect.Offset(0, -rect.Height / 2 - ItemInterval - 1);
+                    DrawDragDropMarker(gr, rect, c1, c2, c3);
+                    break;
+
+                case InsertEffect.InsertAfter:
+                    rect.Offset(0, rect.Height / 2);
+                    DrawDragDropMarker(gr, rect, c1, c2, c3);
+                    break;
+
+                case InsertEffect.AddAsChild:
+                    if (e.ItemIndex >= 0 && e.ItemIndex < ItemCount)
+                    {
+                        var dx = GetItemIndent(e.ItemIndex) + ItemIndentDefault;
+                        var r = new Rectangle(dx, rect.Y + rect.Height / 2, rect.Width, rect.Height);
+                        DrawDragDropMarker(gr, r, c1, c2, c3);
+                        using (var pen = new Pen(c1))
+                            gr.DrawLines(pen, new PointF[] { new Point(r.Left, r.Top + r.Height / 2), new Point(rect.Left + 8, r.Top + r.Height / 2), new Point(rect.Left + 8, r.Top + r.Height / 2 - 5) });
+                    }
+                    break;
+            }
+        }
+
+        private static void DrawDragDropMarker(Graphics gr, Rectangle rect, Color c1, Color c2, Color c3)
+        {
+            var h = rect.Height;
+            using (var brush = new LinearGradientBrush(rect, Color.Empty, Color.Empty, LinearGradientMode.Vertical))
+            {
+                brush.InterpolationColors = new ColorBlend()
+                {
+                    Positions = new float[] { 0, 0.2f, 0.8f, 1.0f },
+                    Colors = new Color[] { c2, c3, c3, c2 }
+                };
+                gr.FillRectangle(brush, new RectangleF(0, rect.Top, rect.Width, rect.Height));
+            }
+
+            rect = new Rectangle(rect.Left, rect.Top + h / 2 - 2, 50, 4);
+            using (var brush = new SolidBrush(c3))
+            using (var pen = new Pen(c1))
+            {
+                gr.FillRectangle(brush, rect);
+                gr.DrawRectangle(pen, rect);
+            }
+        }
+
         #endregion
 
         #region Event Helpers
@@ -692,6 +809,7 @@ namespace FastTreeNS
         private BoolNodeEventArgs boolArg = new BoolNodeEventArgs();
         private StringNodeEventArgs stringArg = new StringNodeEventArgs();
         private ImageNodeEventArgs imageArg = new ImageNodeEventArgs();
+        private StringAlignmentNodeEventArgs alignArg = new StringAlignmentNodeEventArgs();
         private ColorNodeEventArgs colorArg = new ColorNodeEventArgs();
 
         int GetIntNodeProperty(int itemIndex, EventHandler<IntNodeEventArgs> handler, int defaultValue)
@@ -746,6 +864,19 @@ namespace FastTreeNS
             return defaultValue;
         }
 
+        StringAlignment GetLineAlignmentNodeProperty(int itemIndex, EventHandler<StringAlignmentNodeEventArgs> handler, StringAlignment defaultValue)
+        {
+            if (handler != null)
+            {
+                alignArg.Node = nodes[itemIndex];
+                alignArg.Result = defaultValue;
+                handler(this, alignArg);
+                return alignArg.Result;
+            }
+
+            return defaultValue;
+        }
+
         Color GetColorNodeProperty(int itemIndex, EventHandler<ColorNodeEventArgs> handler, Color defaultValue)
         {
             if (handler != null)
@@ -780,6 +911,10 @@ namespace FastTreeNS
     {
     }
 
+    public class StringAlignmentNodeEventArgs : GenericNodeResultEventArgs<StringAlignment>
+    {
+    }
+
     public class ColorNodeEventArgs : GenericNodeResultEventArgs<Color>
     {
     }
@@ -804,6 +939,12 @@ namespace FastTreeNS
     {
         public object Node;
         public bool Selected;
+    }
+
+    public class NodeTextPushedEventArgs : EventArgs
+    {
+        public object Node;
+        public string Text;
     }
 
     public class PaintNodeContentEventArgs : EventArgs

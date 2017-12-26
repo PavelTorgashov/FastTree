@@ -59,7 +59,10 @@ namespace Tester
             //check if targetNode is child of draggedNodes
             foreach(var n in draggedNodes)
             if (targetNode.IsChildOf(n) || n == targetNode)
+            {
+                e.Effect = DragDropEffects.None;
                 return;
+            }
             //
             e.Effect = e.AllowedEffect;
             if(e.X > e.TextRect.Left +  50)

@@ -51,13 +51,14 @@
             | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.fl.AutoScroll = true;
-            this.fl.AutoScrollMinSize = new System.Drawing.Size(0, 2002);
+            this.fl.AutoScrollMinSize = new System.Drawing.Size(0, 1902);
             this.fl.BackColor = System.Drawing.SystemColors.Window;
             this.fl.FullItemSelect = true;
             this.fl.ImageCheckBoxOff = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOff")));
             this.fl.ImageCheckBoxOn = ((System.Drawing.Image)(resources.GetObject("fl.ImageCheckBoxOn")));
             this.fl.ImageCollapse = ((System.Drawing.Image)(resources.GetObject("fl.ImageCollapse")));
             this.fl.ImageDefaultIcon = ((System.Drawing.Image)(resources.GetObject("fl.ImageDefaultIcon")));
+            this.fl.ImageEmptyExpand = ((System.Drawing.Image)(resources.GetObject("fl.ImageEmptyExpand")));
             this.fl.ImageExpand = ((System.Drawing.Image)(resources.GetObject("fl.ImageExpand")));
             this.fl.IsEditMode = false;
             this.fl.ItemCount = 100;
@@ -75,6 +76,7 @@
             this.fl.CanCheckItemNeeded += new System.EventHandler<FastTreeNS.BoolItemEventArgs>(this.fl_CanCheckItemNeeded);
             this.fl.CanExpandItemNeeded += new System.EventHandler<FastTreeNS.BoolItemEventArgs>(this.fl_CanSelectItemNeeded);
             this.fl.CanCollapseItemNeeded += new System.EventHandler<FastTreeNS.BoolItemEventArgs>(this.fl_CanSelectItemNeeded);
+            this.fl.CanEditItemNeeded += new System.EventHandler<FastTreeNS.BoolItemEventArgs>(this.fl_CanEditItemNeeded);
             // 
             // FastListReadonlyAndDisabledItemsSample
             // 

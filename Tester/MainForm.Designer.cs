@@ -56,6 +56,8 @@
             this.button12 = new System.Windows.Forms.Button();
             this.label9 = new System.Windows.Forms.Label();
             this.button9 = new System.Windows.Forms.Button();
+            this.label14 = new System.Windows.Forms.Label();
+            this.button14 = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
             this.groupBox2.SuspendLayout();
             this.SuspendLayout();
@@ -296,6 +298,8 @@
             // 
             // groupBox2
             // 
+            this.groupBox2.Controls.Add(this.label14);
+            this.groupBox2.Controls.Add(this.button14);
             this.groupBox2.Controls.Add(this.label12);
             this.groupBox2.Controls.Add(this.button12);
             this.groupBox2.Controls.Add(this.label9);
@@ -308,7 +312,7 @@
             this.groupBox2.Controls.Add(this.label7);
             this.groupBox2.Location = new System.Drawing.Point(283, 12);
             this.groupBox2.Name = "groupBox2";
-            this.groupBox2.Size = new System.Drawing.Size(317, 256);
+            this.groupBox2.Size = new System.Drawing.Size(317, 378);
             this.groupBox2.TabIndex = 10;
             this.groupBox2.TabStop = false;
             this.groupBox2.Text = "FastTree";
@@ -350,6 +354,25 @@
             this.button9.Text = "Show";
             this.button9.UseVisualStyleBackColor = true;
             this.button9.Click += new System.EventHandler(this.button9_Click);
+            // 
+            // label14
+            // 
+            this.label14.Location = new System.Drawing.Point(47, 263);
+            this.label14.Name = "label14";
+            this.label14.Size = new System.Drawing.Size(183, 33);
+            this.label14.TabIndex = 21;
+            this.label14.Text = "Edit text sample";
+            this.label14.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            // 
+            // button14
+            // 
+            this.button14.Location = new System.Drawing.Point(236, 267);
+            this.button14.Name = "button14";
+            this.button14.Size = new System.Drawing.Size(75, 23);
+            this.button14.TabIndex = 20;
+            this.button14.Text = "Show";
+            this.button14.UseVisualStyleBackColor = true;
+            this.button14.Click += new System.EventHandler(this.button14_Click);
             // 
             // MainForm
             // 
@@ -397,5 +420,7 @@
         private System.Windows.Forms.Button button12;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Label label14;
+        private System.Windows.Forms.Button button14;
     }
 }

@@ -101,10 +101,12 @@ namespace FastTreeNS
         public event EventHandler<BoolItemEventArgs> CanCheckItemNeeded;
         public event EventHandler<BoolItemEventArgs> CanExpandItemNeeded;
         public event EventHandler<BoolItemEventArgs> CanCollapseItemNeeded;
+        public event EventHandler<BoolItemEventArgs> CanEditItemNeeded;
 
         public event EventHandler<ItemCheckedStateChangedEventArgs> ItemCheckedStateChanged;
         public event EventHandler<ItemExpandedStateChangedEventArgs> ItemExpandedStateChanged;
         public event EventHandler<ItemSelectedStateChangedEventArgs> ItemSelectedStateChanged;
+        public event EventHandler<ItemTextPushedEventArgs> ItemTextPushed;
 
         public event EventHandler<PaintItemContentEventArgs> PaintItem;
         public event EventHandler ScrollbarsUpdated;
@@ -129,7 +131,7 @@ namespace FastTreeNS
             return GetIntItemProperty(itemIndex, ItemHeightNeeded, ItemHeightDefault);
         }
 
-        protected override int GetItemIndent(int itemIndex)
+        public override int GetItemIndent(int itemIndex)
         {
             return GetIntItemProperty(itemIndex, ItemIndentNeeded, ItemIndentDefault);
         }
@@ -199,6 +201,11 @@ namespace FastTreeNS
             return GetBoolItemProperty(itemIndex, CanCollapseItemNeeded, true);
         }
 
+        protected override bool CanEditItem(int itemIndex)
+        {
+            return GetBoolItemProperty(itemIndex, CanEditItemNeeded, true);
+        }
+
         protected override void OnItemChecked(int itemIndex)
         {
             if (ItemCheckedStateChanged != null)
@@ -237,6 +244,14 @@ namespace FastTreeNS
                 ItemSelectedStateChanged(this, new ItemSelectedStateChangedEventArgs { ItemIndex = itemIndex, Selected = true });
 
             base.OnItemSelected(itemIndex);
+        }
+
+        protected override void OnItemTextPushed(int itemIndex, string text)
+        {
+            if (ItemTextPushed != null)
+                ItemTextPushed(this, new ItemTextPushedEventArgs { ItemIndex = itemIndex, Text = text});
+
+            base.OnItemTextPushed(itemIndex, text);
         }
 
         protected override void OnItemUnselected(int itemIndex)
@@ -419,5 +434,11 @@ namespace FastTreeNS
     public class ItemDragEventArgs : EventArgs
     {
         public HashSet<int> ItemIndex;
+    }
+
+    public class ItemTextPushedEventArgs : EventArgs
+    {
+        public int ItemIndex;
+        public string Text;
     }
 }

@@ -42,6 +42,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="FastTreeEditSample.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="FastTreeEditSample.Designer.cs">
+      <DependentUpon>FastTreeEditSample.cs</DependentUpon>
+    </Compile>
     <Compile Include="FastListCustomize.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -129,6 +135,10 @@
     <Compile Include="FastListSimplestSample.Designer.cs">
       <DependentUpon>FastListSimplestSample.cs</DependentUpon>
     </Compile>
+    <EmbeddedResource Include="FastTreeEditSample.resx">
+      <DependentUpon>FastTreeEditSample.cs</DependentUpon>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
     <EmbeddedResource Include="FastListCustomize.resx">
       <DependentUpon>FastListCustomize.cs</DependentUpon>
       <SubType>Designer</SubType>

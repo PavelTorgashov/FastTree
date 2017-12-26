@@ -8,7 +8,6 @@ namespace FastTreeNS
     /// <summary>
     /// General tree data model
     /// </summary>
-    [Serializable]
     public class FastTreeNode
     {
         protected readonly List<FastTreeNode> childs = new List<FastTreeNode>();
@@ -171,7 +170,7 @@ namespace FastTreeNS
         public FastTreeNode GetParent(Predicate<object> tagCondition)
         {
             var parent = Parent;
-            while (parent != null && !tagCondition(parent.Tag))
+            while (parent != null && !tagCondition(parent))
                 parent = parent.parent;
             return parent;
         }

@@ -16,6 +16,7 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Text;
+using System.Threading;
 using System.Windows.Forms;
 using System.Linq;
 
@@ -34,7 +35,7 @@ namespace FastTreeNS
         [Browsable(false)]
         public HashSet<int> SelectedItemIndexes { get; private set; }
         [Browsable(false)]
-        public int SelectedItemIndex{get { return SelectedItemIndexes.Count == 0 ? -1 : SelectedItemIndexes.First(); }}
+        public int SelectedItemIndex { get { return SelectedItemIndexes.Count == 0 ? -1 : SelectedItemIndexes.First(); } }
         [Browsable(false)]
         public HashSet<int> CheckedItemIndex { get; private set; }
 
@@ -42,12 +43,16 @@ namespace FastTreeNS
         public bool ShowToolTips { get; set; }
         [DefaultValue(17)]
         public virtual int ItemHeightDefault { get; set; }
+        [DefaultValue(StringAlignment.Near)]
+        public virtual StringAlignment ItemLineAlignmentDefault { get; set; }
         [DefaultValue(10)]
         public virtual int ItemIndentDefault { get; set; }
         [DefaultValue(typeof(Size), "16, 16")]
         public Size IconSize { get; set; }
         [Browsable(false)]
         public bool IsEditMode { get; set; }
+        [Browsable(true), DefaultValue(false)]
+        public bool Readonly { get; set; }
         [DefaultValue(false)]
         public bool ShowIcons { get; set; }
         [DefaultValue(false)]
@@ -81,6 +86,7 @@ namespace FastTreeNS
         public bool HotTracking { get; set; }
         [DefaultValue(typeof(Color), "255, 192, 128")]
         public Color HotTrackingColor { get; set; }
+
         [Browsable(true)]
         [DefaultValue(true)]
         [Description("Scollbar visibility.")]
@@ -88,22 +94,22 @@ namespace FastTreeNS
         {
             get { return showScrollBar; }
             set
-            { 
+            {
                 if (value == showScrollBar) return;
                 showScrollBar = value;
                 buildNeeded = true;
                 Invalidate();
             }
-        }       
+        }
 
         [Browsable(false)]
         public override bool AutoScroll { get { return true; } }
 
         public FastListBase()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.UserPaint | ControlStyles.ResizeRedraw | ControlStyles.Selectable, true);
 
-            tt = new ToolTip() {UseAnimation = false };
+            tt = new ToolTip() { UseAnimation = false };
 
             SelectedItemIndexes = new HashSet<int>();
             CheckedItemIndex = new HashSet<int>();
@@ -134,7 +140,7 @@ namespace FastTreeNS
             showScrollBar = true;
         }
 
-        public virtual int ItemCount 
+        public virtual int ItemCount
         {
             get { return itemCount; }
             set
@@ -166,7 +172,7 @@ namespace FastTreeNS
                 textRect = new Rectangle(info.X_Text, rect.Y, info.X_EndText - info.X_Text + 1, rect.Height);
             }
 
-            var ea = new DragOverItemEventArgs(e.Data, e.KeyState, p.X, p.Y, e.AllowedEffect, e.Effect, rect, textRect){ItemIndex = itemIndex};
+            var ea = new DragOverItemEventArgs(e.Data, e.KeyState, p.X, p.Y, e.AllowedEffect, e.Effect, rect, textRect) { ItemIndex = itemIndex };
 
             OnDragOverItem(ea);
 
@@ -187,9 +193,9 @@ namespace FastTreeNS
             }
             else
             {
-                if (p.Y <= Padding.Top + ItemHeightDefault/2)
+                if (p.Y <= Padding.Top + ItemHeightDefault / 2)
                     ScrollUp();
-                else if (p.Y >= ClientSize.Height - Padding.Bottom - +ItemHeightDefault/2)
+                else if (p.Y >= ClientSize.Height - Padding.Bottom - +ItemHeightDefault / 2)
                     ScrollDown();
             }
 
@@ -247,7 +253,7 @@ namespace FastTreeNS
                                          y + h);
 
                 if (index >= itemCount)
-                    res.Offset(0, (index - itemCount + 1)*ItemHeightDefault);
+                    res.Offset(0, (index - itemCount + 1) * ItemHeightDefault);
             }
 
             res.Offset(-HorizontalScroll.Value, -VerticalScroll.Value);
@@ -292,7 +298,9 @@ namespace FastTreeNS
 
             if (e.Handled) return;
 
-            switch(e.KeyCode)
+            CancelDelayedAction();
+
+            switch (e.KeyCode)
             {
                 case Keys.Up:
                     if (e.Control)
@@ -360,8 +368,9 @@ namespace FastTreeNS
                             else
                                 CheckSelected();
                         }
-                    }else
-                    if(ShowExpandBoxes)
+                    }
+                    else
+                    if (ShowExpandBoxes)
                     {
                         if (SelectedItemIndexes.Count > 0)
                         {
@@ -374,13 +383,35 @@ namespace FastTreeNS
                     }
                     break;
 
-                case Keys.A :
-                    if(e.Control)
+                case Keys.A:
+                    if (e.Control)
                     {
                         SelectAll();
                     }
                     break;
             }
+        }
+
+        #endregion
+
+        #region Dealyed Actions
+
+        private System.Threading.Timer delayedActionTimer;
+
+        protected void CreateDelayedAction(Action action, int delayInterval)
+        {
+            CancelDelayedAction();
+            delayedActionTimer = new System.Threading.Timer((o) => this.Invoke(action), null, delayInterval, Timeout.Infinite);
+        }
+
+        protected void CancelDelayedAction()
+        {
+            if (delayedActionTimer != null)
+            {
+                delayedActionTimer.Change(Timeout.Infinite, Timeout.Infinite);
+                delayedActionTimer.Dispose();
+            }
+            delayedActionTimer = null;
         }
 
         #endregion
@@ -397,33 +428,42 @@ namespace FastTreeNS
         {
             base.OnMouseDown(e);
 
+            Focus();
             mouseCanSelectArea = false;
             mouseSelectArea = Rectangle.Empty;
             lastMouseClick = e.Location;
+            CancelDelayedAction();
 
             var item = PointToItemInfo(e.Location);
 
             if (item == null)
                 return;
 
-            if (AllowSelectItems)
-            if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
-            {
-                //Select
-                if (MultiSelect)
-                {
-                    startMouseSelectArea = e.Location;
-                    startMouseSelectArea.Offset(HorizontalScroll.Value, VerticalScroll.Value);
-                    mouseCanSelectArea = item.X_EndText < e.Location.X || !AllowDragItems;
-                }
+            if (e.Button == MouseButtons.Left && item.X_Text <= e.Location.X)
+                if (SelectedItemIndexes.Count == 1 && SelectedItemIndexes.Contains(item.ItemIndex))
+                    if (!Readonly && CanEditItem(item.ItemIndex))
+                    {
+                        CreateDelayedAction(() => OnStartEdit(item.ItemIndex), 500);
+                    }
 
-                if (!AllowDragItems || !MultiSelect)
-                    OnMouseSelectItem(e, item);
-            }
+            if (AllowSelectItems)
+                if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
+                {
+                    //Select
+                    if (MultiSelect)
+                    {
+                        startMouseSelectArea = e.Location;
+                        startMouseSelectArea.Offset(HorizontalScroll.Value, VerticalScroll.Value);
+                        mouseCanSelectArea = item.X_EndText < e.Location.X || !AllowDragItems;
+                    }
+
+                    if (!AllowDragItems || !MultiSelect)
+                        OnMouseSelectItem(e, item);
+                }
 
             if (ShowCheckBoxes && e.Button == MouseButtons.Left)
             {
-                if((item.X_CheckBox <= e.Location.X && item.X_Icon > e.Location.X)||(!AllowSelectItems))
+                if ((item.X_CheckBox <= e.Location.X && item.X_Icon > e.Location.X) || (!AllowSelectItems))
                 {
                     //Checkbox
                     OnCheckboxClick(item);
@@ -432,12 +472,12 @@ namespace FastTreeNS
             }
 
             if (ShowExpandBoxes)
-            if (e.Button == MouseButtons.Left && item.X_ExpandBox <= e.Location.X && item.X_CheckBox > e.Location.X)
-            {
-                //Expand
-                OnExpandBoxClick(item);
-                Invalidate();
-            }
+                if (e.Button == MouseButtons.Left && item.X_ExpandBox <= e.Location.X && item.X_CheckBox > e.Location.X)
+                {
+                    //Expand
+                    OnExpandBoxClick(item);
+                    Invalidate();
+                }
         }
 
         protected virtual void OnMouseSelectItem(MouseEventArgs e, VisibleItemInfo item)
@@ -479,7 +519,10 @@ namespace FastTreeNS
         {
             base.OnMouseMove(e);
 
-            if(e.Button == MouseButtons.Left && mouseCanSelectArea)
+            if (e.Button != MouseButtons.None)
+                CancelDelayedAction();
+
+            if (e.Button == MouseButtons.Left && mouseCanSelectArea)
             {
                 if (Math.Abs(e.Location.X - startMouseSelectArea.X) > 0)
                 {
@@ -506,22 +549,30 @@ namespace FastTreeNS
                     mouseSelectArea = Rectangle.Empty;
             }
             else
-            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && SelectedItemIndexes.Count > 0 && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
+            if (e.Button == System.Windows.Forms.MouseButtons.Left && AllowDragItems && (Math.Abs(lastMouseClick.X - e.Location.X) > 2 || Math.Abs(lastMouseClick.Y - e.Location.Y) > 2))
             {
-                OnItemDrag(new HashSet<int>(SelectedItemIndexes));
-            }else
-            if(e.Button == System.Windows.Forms.MouseButtons.None)
+                var p = PointToClient(MousePosition);
+                var info = PointToItemInfo(p);
+                if (info != null)
+                {
+                    if (!SelectedItemIndexes.Contains(info.ItemIndex))
+                        SelectItem(info.ItemIndex);
+                    OnItemDrag(new HashSet<int>(SelectedItemIndexes));
+                }
+            }
+            else
+            if (e.Button == System.Windows.Forms.MouseButtons.None)
             {
                 var p = PointToClient(MousePosition);
                 var info = PointToItemInfo(p);
 
-                if(HotTracking)
+                if (HotTracking)
                 {
                     var i = -1;
-                    if(info != null)
+                    if (info != null)
                         i = info.ItemIndex;
 
-                    if(currentHotTrackingIndex != i)
+                    if (currentHotTrackingIndex != i)
                     {
                         currentHotTrackingIndex = i;
                         Invalidate();
@@ -553,12 +604,12 @@ namespace FastTreeNS
             var item = PointToItemInfo(e.Location);
 
             if (item != null)
-            if (AllowSelectItems)
-            if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
-            {
-                if (AllowDragItems && MultiSelect && mouseSelectArea == Rectangle.Empty)
-                    OnMouseSelectItem(e, item);
-            }
+                if (AllowSelectItems)
+                    if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
+                    {
+                        if (AllowDragItems && MultiSelect && mouseSelectArea == Rectangle.Empty)
+                            OnMouseSelectItem(e, item);
+                    }
 
             mouseCanSelectArea = false;
 
@@ -569,16 +620,18 @@ namespace FastTreeNS
         {
             base.OnMouseDoubleClick(e);
 
+            CancelDelayedAction();
+
             var item = PointToItemInfo(e.Location);
 
             if (item != null)
-            if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
-            {
-                if (GetItemExpanded(item.ItemIndex))
-                    CollapseItem(item.ItemIndex);
-                else
-                    ExpandItem(item.ItemIndex);
-            }
+                if (e.Button == MouseButtons.Left && item.X_Icon <= e.Location.X)
+                {
+                    if (GetItemExpanded(item.ItemIndex))
+                        CollapseItem(item.ItemIndex);
+                    else
+                        ExpandItem(item.ItemIndex);
+                }
         }
 
         #endregion mouse
@@ -597,7 +650,7 @@ namespace FastTreeNS
         {
             Invalidate();
 
-            if(CanCollapseItem(itemIndex))
+            if (CanCollapseItem(itemIndex))
             {
                 OnItemCollapsed(itemIndex);
                 return true;
@@ -740,9 +793,9 @@ namespace FastTreeNS
 
         public virtual bool UnselectAll()
         {
-            foreach(var i in SelectedItemIndexes)
-            if (!CanUnselectItem(i))
-                return false;
+            foreach (var i in SelectedItemIndexes)
+                if (!CanUnselectItem(i))
+                    return false;
 
             var list = new List<int>(SelectedItemIndexes);
 
@@ -766,12 +819,12 @@ namespace FastTreeNS
 
             var contains = SelectedItemIndexes.Contains(itemIndex);
 
-            if(unselectOtherItems)
+            if (unselectOtherItems)
             {
                 foreach (var i in SelectedItemIndexes)
-                    if(i != itemIndex)
-                    if (!CanUnselectItem(i))
-                        return false;
+                    if (i != itemIndex)
+                        if (!CanUnselectItem(i))
+                            return false;
 
                 var list = new List<int>(SelectedItemIndexes);
 
@@ -813,13 +866,13 @@ namespace FastTreeNS
                     OnItemUnselected(i);
                 }
 
-            for(int i=from;i<=to;i++)
-            if(!SelectedItemIndexes.Contains(i))
-            if(CanSelectItem(i))
-            {
-                SelectedItemIndexes.Add(i);
-                OnItemSelected(i);
-            }
+            for (int i = from; i <= to; i++)
+                if (!SelectedItemIndexes.Contains(i))
+                    if (CanSelectItem(i))
+                    {
+                        SelectedItemIndexes.Add(i);
+                        OnItemSelected(i);
+                    }
 
             Invalidate();
 
@@ -878,7 +931,7 @@ namespace FastTreeNS
         protected override void OnPaint(PaintEventArgs e)
         {
             //was build request
-            if(buildNeeded)
+            if (buildNeeded)
             {
                 Build();
                 buildNeeded = false;
@@ -892,11 +945,13 @@ namespace FastTreeNS
             else
                 DrawDragOverInsertEffect(e.Graphics, lastDragAndDropEffect);
 
+            base.OnPaint(e);
+
             if (!Enabled)
             {
                 e.Graphics.SetClip(ClientRectangle);
                 var color = Color.FromArgb(50, (BackColor.R + 127) >> 1, (BackColor.G + 127) >> 1, (BackColor.B + 127) >> 1);
-                using(var brush = new SolidBrush(color))
+                using (var brush = new SolidBrush(color))
                     e.Graphics.FillRectangle(brush, ClientRectangle);
             }
         }
@@ -911,7 +966,7 @@ namespace FastTreeNS
             var info = visibleItemInfos[e.ItemIndex];
             var rect = new Rectangle(info.X_ExpandBox, info.Y, 1000, info.Height);
 
-            switch(e.InsertEffect)
+            switch (e.InsertEffect)
             {
                 case InsertEffect.Replace:
                     using (var brush = new SolidBrush(c1))
@@ -929,7 +984,7 @@ namespace FastTreeNS
                     if (e.ItemIndex < 0)
                         rect.Offset(0, 2);
                     using (var pen = new Pen(c1, 2) { DashStyle = DashStyle.Dash })
-                        gr.DrawLine(pen , rect.Left, rect.Bottom, rect.Right, rect.Bottom);
+                        gr.DrawLine(pen, rect.Left, rect.Bottom, rect.Right, rect.Bottom);
                     break;
 
                 case InsertEffect.AddAsChild:
@@ -937,7 +992,7 @@ namespace FastTreeNS
                     {
                         var dx = GetItemIndent(e.ItemIndex) + 80;
                         rect.Offset(dx, 0);
-                        using (var pen = new Pen(c1, 2) {DashStyle = DashStyle.Dash})
+                        using (var pen = new Pen(c1, 2) { DashStyle = DashStyle.Dash })
                             gr.DrawLine(pen, rect.Left, rect.Bottom, rect.Right, rect.Bottom);
                     }
                     break;
@@ -950,7 +1005,7 @@ namespace FastTreeNS
             {
                 var c = Color.FromArgb(SelectionColor.A == 255 ? SelectionColorOpaque : SelectionColor.A, SelectionColor);
                 var rect = new Rectangle(mouseSelectArea.Left - HorizontalScroll.Value, mouseSelectArea.Top - VerticalScroll.Value, mouseSelectArea.Width, mouseSelectArea.Height);
-                using(var pen = new Pen(c))
+                using (var pen = new Pen(c))
                     gr.DrawRectangle(pen, rect);
             }
 
@@ -984,8 +1039,9 @@ namespace FastTreeNS
             DrawItemBackgound(gr, info);
 
             if (lastDragAndDropEffect == null) //do not draw selection when drag&drop over the control
-                if (SelectedItemIndexes.Contains(info.ItemIndex))
-                    DrawSelection(gr, info);
+                if (!IsEditMode)//do not draw selection when edit mode
+                    if (SelectedItemIndexes.Contains(info.ItemIndex))
+                        DrawSelection(gr, info);
 
             if (HotTracking && info.ItemIndex == currentHotTrackingIndex)
                 DrawItemHotTracking(gr, info);
@@ -1036,12 +1092,12 @@ namespace FastTreeNS
             }
 
             if (rect.Width > 0 && rect.Height > 0)
-            using (var brush = new LinearGradientBrush(rect, c2, c1, LinearGradientMode.Vertical))
-            using (var pen = new Pen(c1))
-            {
-                gr.FillRectangle(brush, Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right + 1, rect.Bottom + 1));
-                gr.DrawRectangle(pen, rect);
-            }
+                using (var brush = new LinearGradientBrush(rect, c2, c1, LinearGradientMode.Vertical))
+                using (var pen = new Pen(c1))
+                {
+                    gr.FillRectangle(brush, Rectangle.FromLTRB(rect.Left, rect.Top, rect.Right + 1, rect.Bottom + 1));
+                    gr.DrawRectangle(pen, rect);
+                }
         }
 
         /// <summary>
@@ -1051,30 +1107,44 @@ namespace FastTreeNS
         {
             if (info.ExpandBoxType > 0)
             {
-                var img = (Bitmap)(info.ExpandBoxType == 2 ? ImageEmptyExpand :  (info.Expanded ? ImageCollapse : ImageExpand));
-                img.SetResolution(gr.DpiX, gr.DpiY);
-                gr.DrawImage(img, info.X_ExpandBox, info.Y + 1);
+                var img = (Bitmap)(info.ExpandBoxType == 2 ? ImageEmptyExpand : (info.Expanded ? ImageCollapse : ImageExpand));
+                if (img != null)
+                {
+                    img.SetResolution(gr.DpiX, gr.DpiY);
+                    gr.DrawImage(img, info.X_ExpandBox, info.Y + 1);
+                }
             }
 
             if (info.CheckBoxVisible)
             {
                 var img = (Bitmap)(GetItemChecked(info.ItemIndex) ? ImageCheckBoxOn : ImageCheckBoxOff);
-                img.SetResolution(gr.DpiX, gr.DpiY);
-                gr.DrawImage(img, info.X_CheckBox, info.Y + 1);
+                if (img != null)
+                {
+                    img.SetResolution(gr.DpiX, gr.DpiY);
+                    gr.DrawImage(img, info.X_CheckBox, info.Y + 1);
+                }
             }
 
             if (ShowIcons && info.Icon != null)
             {
                 var img = (Bitmap)info.Icon;
-                img.SetResolution(gr.DpiX, gr.DpiY);
-                gr.DrawImage(img, info.X_Icon, info.Y + 1);
+                if (img != null)
+                {
+                    img.SetResolution(gr.DpiX, gr.DpiY);
+                    gr.DrawImage(img, info.X_Icon, info.Y + 1);
+                }
             }
         }
 
         public virtual void DrawItemContent(Graphics gr, VisibleItemInfo info)
         {
+            using(var sf  = new StringFormat() { LineAlignment = info.LineAlignment })
             using (var brush = new SolidBrush(info.ForeColor))
-                gr.DrawString(info.Text, Font, brush, info.X_Text, info.Y + 1);
+            {
+                var rect = new Rectangle(info.X_Text, info.Y + 1, info.X_EndText - info.X_Text + 1, info.Height - 1);
+                //gr.DrawString(info.Text, Font, brush, info.X_Text, info.Y + 1, sf);
+                gr.DrawString(info.Text, Font, brush, rect, sf);
+            }
         }
 
         public virtual void DrawItemBackgound(Graphics gr, VisibleItemInfo info)
@@ -1082,8 +1152,8 @@ namespace FastTreeNS
             var backColor = info.BackColor;
 
             if (backColor != Color.Empty)
-            using (var brush = new SolidBrush(backColor))
-                gr.FillRectangle(brush, info.TextAndIconRect);
+                using (var brush = new SolidBrush(backColor))
+                    gr.FillRectangle(brush, info.TextAndIconRect);
         }
 
         protected virtual VisibleItemInfo CalcVisibleItemInfo(Graphics gr, int itemIndex)
@@ -1116,11 +1186,12 @@ namespace FastTreeNS
                 return -1;
 
             int i = 0;
-            
-            if(IsItemHeightFixed)
+
+            if (IsItemHeightFixed)
             {
                 i = (y - Padding.Top) / (ItemHeightDefault + ItemInterval);
-            }else
+            }
+            else
             {
                 i = yOfItems.BinarySearch(y + 1);
                 if (i < 0)
@@ -1135,7 +1206,7 @@ namespace FastTreeNS
 
             return i;
         }
-        
+
         protected virtual int GetItemY(int index)
         {
             if (IsItemHeightFixed)
@@ -1223,10 +1294,16 @@ namespace FastTreeNS
             public bool Expanded;
             public Color ForeColor;
             public Color BackColor;
+            public StringAlignment LineAlignment = StringAlignment.Near;
+
+            public Rectangle FullRect
+            {
+                get { return new Rectangle(X, Y, X_End - X + 1, Height); }
+            }
 
             public Rectangle Rect
             {
-                get { return new Rectangle(X, Y, X_EndText - X + 1, Height); }
+                get { return new Rectangle(X_ExpandBox, Y, X_EndText - X + 1, Height); }
             }
 
             public Rectangle TextAndIconRect
@@ -1242,11 +1319,12 @@ namespace FastTreeNS
             public virtual void Calc(FastListBase list, int itemIndex, Graphics gr)
             {
                 //var vertScroll = list.VerticalScroll.Visible ? list.VerticalScroll.Value : 0;
-                var vertScroll = list.VerticalScroll.Value ;//!!!!!!!!!!!!
+                var vertScroll = list.VerticalScroll.Value;//!!!!!!!!!!!!
 
                 ItemIndex = itemIndex;
                 CheckBoxVisible = list.ShowCheckBoxes && list.GetItemCheckBoxVisible(itemIndex);
                 Icon = list.GetItemIcon(itemIndex);
+                LineAlignment = list.GetItemLineAlignment(itemIndex);
                 var y = list.GetItemY(itemIndex);
                 Y = y - vertScroll;
                 Height = list.GetItemY(itemIndex + 1) - y - list.ItemInterval;
@@ -1257,8 +1335,8 @@ namespace FastTreeNS
                 BackColor = list.GetItemBackColor(itemIndex);
                 ForeColor = list.GetItemForeColor(itemIndex);
 
+                X = list.Padding.Left;
                 var x = list.GetItemIndent(itemIndex) + list.Padding.Left;
-                X = x;
                 X_ExpandBox = x;
                 if (list.ShowExpandBoxes) x += list.ImageExpand.Width + 2;
                 X_CheckBox = x;
@@ -1291,9 +1369,10 @@ namespace FastTreeNS
                 }
 
                 yOfItems.Add(y);
-            }else
+            }
+            else
             {
-                y += itemCount*(ItemHeightDefault + ItemInterval);
+                y += itemCount * (ItemHeightDefault + ItemInterval);
             }
 
 
@@ -1317,10 +1396,10 @@ namespace FastTreeNS
 
         protected virtual int GetItemHeight(int itemIndex)
         {
-            return  ItemHeightDefault;
+            return ItemHeightDefault;
         }
 
-        protected virtual int GetItemIndent(int itemIndex)
+        public virtual int GetItemIndent(int itemIndex)
         {
             return ItemIndentDefault;
         }
@@ -1328,6 +1407,11 @@ namespace FastTreeNS
         protected virtual string GetItemText(int itemIndex)
         {
             return string.Empty;
+        }
+
+        protected virtual void OnItemTextPushed(int itemIndex, string text)
+        {
+            Invalidate();
         }
 
         protected virtual bool GetItemCheckBoxVisible(int itemIndex)
@@ -1343,6 +1427,11 @@ namespace FastTreeNS
         protected virtual Image GetItemIcon(int itemIndex)
         {
             return null;
+        }
+
+        protected virtual StringAlignment GetItemLineAlignment(int itemIndex)
+        {
+            return StringAlignment.Near;
         }
 
         protected virtual Color GetItemBackColor(int itemIndex)
@@ -1386,6 +1475,11 @@ namespace FastTreeNS
         }
 
         protected virtual bool CanCollapseItem(int itemIndex)
+        {
+            return true;
+        }
+
+        protected virtual bool CanEditItem(int itemIndex)
         {
             return true;
         }
@@ -1472,12 +1566,25 @@ namespace FastTreeNS
         private const int WM_HSCROLL = 0x114;
         private const int WM_VSCROLL = 0x115;
         private const int SB_ENDSCROLL = 0x8;
+        private const int WM_MOUSEWHEEL = 0x20A;
 
         protected override void WndProc(ref Message m)
         {
             if (m.Msg == WM_HSCROLL || m.Msg == WM_VSCROLL)
                 if (m.WParam.ToInt32() != SB_ENDSCROLL)
+                {
+                    Focus();
                     Invalidate();
+                }
+            if (m.Msg == WM_MOUSEWHEEL)
+            {
+                //var step = 3 * ItemHeightDefault * Math.Sign(-m.WParam.ToInt64());
+                var step = -3 * ItemHeightDefault * Math.Sign((short) (m.WParam.ToInt64() >> 16));
+                if(VerticalScroll.Visible)
+                    OnScroll(new ScrollEventArgs(ScrollEventType.ThumbPosition, VerticalScroll.Value + step, ScrollOrientation.VerticalScroll));
+                Focus();
+                return;
+            }
 
             base.WndProc(ref m);
         }
@@ -1540,6 +1647,82 @@ namespace FastTreeNS
 
         #endregion
 
+        #region Edit
+
+        protected int EditItemIndex;
+        protected Control EditControl;
+        protected int editUpdating = 0;
+
+        public virtual void OnStartEdit(int itemIndex, string startValue = null)
+        {
+            if (!visibleItemInfos.ContainsKey(itemIndex))
+                return;
+
+            var info = visibleItemInfos[itemIndex];
+
+            EditItemIndex = itemIndex;
+            IsEditMode = true;
+            var ctrl = new TextBox() { Text = GetItemText(itemIndex), AcceptsTab = true, Multiline = false, WordWrap = false };
+            ctrl.Bounds = new Rectangle(info.X_Text, info.Y, info.X_End - info.X_Text, info.Height);
+            ctrl.Parent = this;
+            ctrl.Focus();
+            if (startValue != null)
+            {
+                ctrl.Text = startValue;
+                (ctrl as TextBox).SelectionStart = startValue.Length;
+            }
+            ctrl.LostFocus += (o, a) => OnEndEdit();
+            ctrl.PreviewKeyDown += (o, a) => a.IsInputKey = true;
+            ctrl.KeyDown += (o, a) =>
+            {
+                switch (a.KeyCode)
+                {
+                    case Keys.Escape: OnEndEdit(null); a.Handled = true; a.SuppressKeyPress = true; break;
+                    case Keys.Enter: OnEndEdit(); a.Handled = true; a.SuppressKeyPress = true; break;
+                }
+            };
+            EditControl = ctrl;
+            Invalidate();
+        }
+
+        public virtual void OnEndEdit()
+        {
+            string val = null;
+
+            if (EditControl != null)
+                val = EditControl.Text;
+
+            OnEndEdit(val);
+        }
+
+        public virtual void OnEndEdit(string newValue)
+        {
+            if (editUpdating > 0)
+                return;
+
+            try
+            {
+                editUpdating++;
+
+                if (newValue != null)
+                    OnItemTextPushed(EditItemIndex, newValue);
+
+                if (EditControl != null)
+                    EditControl.Parent = null;
+
+                EditControl = null;
+                IsEditMode = false;
+                //mouseCanSelect = false;
+                Invalidate();
+            }
+            finally
+            {
+                editUpdating--;
+            }
+        }
+
+        #endregion
+
         #region Routines
 
         protected override void OnGotFocus(EventArgs e)
@@ -1570,7 +1753,7 @@ namespace FastTreeNS
 
     public class DragOverItemEventArgs : DragEventArgs
     {
-        public int ItemIndex { get; set;}
+        public int ItemIndex { get; set; }
         public InsertEffect InsertEffect { get; set; }
         public Rectangle ItemRect { get; private set; }
         public Rectangle TextRect { get; private set; }

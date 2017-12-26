@@ -1,6 +1,6 @@
 ﻿namespace Tester
 {
-    partial class FastTreeSimplestSample
+    partial class FastTreeEditSample
     {
         /// <summary>
         /// Required designer variable.
@@ -60,14 +60,13 @@
             this.ft.ImageEmptyExpand = ((System.Drawing.Image)(resources.GetObject("ft.ImageEmptyExpand")));
             this.ft.ImageExpand = ((System.Drawing.Image)(resources.GetObject("ft.ImageExpand")));
             this.ft.IsEditMode = false;
-            this.ft.ItemHeightDefault = 50;
-            this.ft.ItemLineAlignmentDefault = System.Drawing.StringAlignment.Center;
             this.ft.Location = new System.Drawing.Point(12, 14);
             this.ft.MultiSelect = true;
             this.ft.Name = "ft";
             this.ft.ShowExpandBoxes = true;
             this.ft.Size = new System.Drawing.Size(428, 416);
             this.ft.TabIndex = 2;
+            this.ft.NodeTextPushed += new System.EventHandler<FastTreeNS.NodeTextPushedEventArgs>(this.ft_NodeTextPushed);
             // 
             // FastTreeSimplestSample
             // 
@@ -77,7 +76,7 @@
             this.Controls.Add(this.ft);
             this.Controls.Add(this.propertyGrid1);
             this.Name = "FastTreeSimplestSample";
-            this.Text = "FastTreeSimplestSample";
+            this.Text = "FastTreeEditSample";
             this.ResumeLayout(false);
 
         }

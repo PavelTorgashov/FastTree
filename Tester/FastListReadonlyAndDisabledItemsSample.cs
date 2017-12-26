@@ -22,7 +22,7 @@ namespace Tester
         {
             switch(e.ItemIndex % 20)
             {
-                case 5: e.Result = "Readonly item " + e.ItemIndex + ". You can not check/uncheck this item."; break;
+                case 5: e.Result = "Readonly item " + e.ItemIndex + ". You can not check/uncheck/edit this item."; break;
                 case 15: e.Result = "Disabled item " + e.ItemIndex + ". You can not select this item."; break;
                 default: e.Result = "Regular item " + e.ItemIndex; break;
             }
@@ -34,6 +34,14 @@ namespace Tester
             {
                 case 5: e.Result = false; break;
                 case 15: e.Result = false; break;
+            }
+        }
+
+        private void fl_CanEditItemNeeded(object sender, FastTreeNS.BoolItemEventArgs e)
+        {
+            switch (e.ItemIndex % 20)
+            {
+                case 5: e.Result = false; break;
             }
         }
 

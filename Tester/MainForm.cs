@@ -80,5 +80,10 @@ namespace Tester
         {
             new FastListCustomize().Show();
         }
+
+        private void button14_Click(object sender, EventArgs e)
+        {
+            new FastTreeEditSample().Show();
+        }
     }
 }

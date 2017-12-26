@@ -4,6 +4,21 @@
         <name>FastTree</name>
     </assembly>
     <members>
+        <member name="E:FastTreeNS.FastList.ItemDrag">
+            <summary>
+            Occurs when user start to drag items
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastList.DragOverItem">
+            <summary>
+            Occurs when user drag object over node
+            </summary>
+        </member>
+        <member name="E:FastTreeNS.FastList.DropOverItem">
+            <summary>
+            Occurs when user drop object on given item
+            </summary>
+        </member>
         <member name="M:FastTreeNS.FastListBase.DrawItemIcons(System.Drawing.Graphics,FastTreeNS.FastListBase.VisibleItemInfo)">
             <summary>
             Draws Expand box, Check box and Icon of the Item
@@ -26,11 +41,6 @@
             Control visible rect coordinates to item info
             </summary>
         </member>
-        <member name="M:FastTreeNS.FastListBase.UpdateScrollbars">
-            <summary>
-            Updates scrollbar position after Value changed
-            </summary>
-        </member>
         <member name="T:FastTreeNS.FastListBase.VisibleItemInfo">
             <summary>
               x0  x1  x2  x3      x4     x5
@@ -38,29 +48,9 @@
               □   □   □   ItemText       
             </summary>
         </member>
-        <member name="E:FastTreeNS.FastList.ItemDrag">
+        <member name="M:FastTreeNS.FastListBase.UpdateScrollbars">
             <summary>
-            Occurs when user start to drag items
-            </summary>
-        </member>
-        <member name="E:FastTreeNS.FastList.DragOverItem">
-            <summary>
-            Occurs when user drag object over node
-            </summary>
-        </member>
-        <member name="E:FastTreeNS.FastList.DropOverItem">
-            <summary>
-            Occurs when user drop object on given item
-            </summary>
-        </member>
-        <member name="M:FastTreeNS.FastTree.GetNodeExpandedChildren(System.Object,System.Boolean)">
-            <summary>
-            Returns all expanded children of the node
-            </summary>
-        </member>
-        <member name="M:FastTreeNS.FastTree.GetItemExpandedChildren(System.Int32,System.Boolean)">
-            <summary>
-            Returns all expanded children of the item
+            Updates scrollbar position after Value changed
             </summary>
         </member>
         <member name="P:FastTreeNS.FastTree.Nodes">
@@ -81,6 +71,27 @@
         <member name="E:FastTreeNS.FastTree.DropOverNode">
             <summary>
             Occurs when user drop object on given node
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastTree.GetNodeExpandedChildren(System.Object,System.Boolean)">
+            <summary>
+            Returns all expanded children of the node
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastTree.GetItemExpandedChildren(System.Int32,System.Boolean)">
+            <summary>
+            Returns all expanded children of the item
+            </summary>
+        </member>
+        <member name="M:FastTreeNS.FastTree.CanExpandNode(System.Object)">
+            <summary>
+            This method is used only for programmatically expanding.
+            For GUI expanding - use CanExpandItem
+            </summary>
+        </member>
+        <member name="T:FastTreeNS.FastTreeNode">
+            <summary>
+            General tree data model
             </summary>
         </member>
         <member name="T:FastTreeNS.Resources">
@@ -127,11 +138,6 @@
         <member name="P:FastTreeNS.Resources.expand">
             <summary>
               Looks up a localized resource of type System.Drawing.Bitmap.
-            </summary>
-        </member>
-        <member name="T:FastTreeNS.FastTreeNode">
-            <summary>
-            General tree data model
             </summary>
         </member>
     </members>
